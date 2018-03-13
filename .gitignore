@@ -1,0 +1,8 @@
+# 忽略workspace
+.idea/workspace.xml
+
+# 忽略out下文件
+out/
+
+# 忽略所有字节码
+*.class
