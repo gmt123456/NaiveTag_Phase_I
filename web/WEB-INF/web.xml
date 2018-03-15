@@ -5,12 +5,12 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>are</servlet-name>
-        <servlet-class>Hello</servlet-class>
+        <servlet-name>Upload</servlet-name>
+        <servlet-class>UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>are</servlet-name>
-        <url-pattern>/hello.html</url-pattern>
+        <servlet-name>Upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
     </servlet-mapping>
 
 </web-app>
