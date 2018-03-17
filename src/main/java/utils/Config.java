@@ -1,3 +1,5 @@
+package utils;
+
 /**
  * Created on 2018/3/15.
  * Description:
@@ -16,8 +18,6 @@ public class Config {
 
     public static final int MAX_REQUEST_SIZE = 1024 * 1024 * 600;
 
-    public static final int BATCH_SIZE = 10;
-
-    private Config() {}
+    public static final int ZIPPER_BUFF_SIZE = 1024;
 
 }

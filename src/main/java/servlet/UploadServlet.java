@@ -1,3 +1,8 @@
+package servlet;
+
+import utils.Config;
+import utils.JsonFileParser;
+import utils.ZipHelper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -6,8 +11,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,8 +29,6 @@ public class UploadServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        System.out.println("Are you Ok?");
 
         if (!ServletFileUpload.isMultipartContent(req))
             return;
@@ -39,6 +46,8 @@ public class UploadServlet extends HttpServlet {
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
 
+        HttpSession session = req.getSession(true);
+
         try {
             String fileName = null;
             String filePath = null;
@@ -54,14 +63,42 @@ public class UploadServlet extends HttpServlet {
                     break;
                 }
             }
-            String unzipPath = req.getRealPath("") + Config.UNZIP_PATH + File.separator + fileName;
+            fileName = fileName.substring(0, fileName.length() - 4);
+            String unzipPath = req.getRealPath("") + File.separator + Config.UNZIP_PATH;
             System.out.println(new ZipHelper().unZip(filePath, unzipPath));
-            req.setAttribute("filePath", unzipPath);
+            session.setAttribute("filePath", "/" + Config.UNZIP_PATH + "/" +
+                    fileName + "/" + "data" + "/");
+
+            //解析任务内容
+            String jsonFilePath = unzipPath + File.separator + fileName + "/task.json";
+            JsonFileParser parser = new JsonFileParser(jsonFilePath);
+
+            int taskType = parser.getTaskType();
+            String format = parser.getFormat();
+            String description = parser.getDescription();
+            //目录下所有图片文件
+            //session.setAttribute("description", description);
+
+            String dataSet = unzipPath + File.separator + fileName + File.separator + "data" + File.separator;
+            String[] picNames = new File(dataSet).list((dir, name) -> name.endsWith(format));
+
+            for (String p: picNames) {
+                System.out.println(p);
+            }
+
+            System.out.println(taskType);
+            System.out.println(description);
+
+            List<String> picList = Arrays.asList(picNames);
+            session.setAttribute("pic", picList);
+
         } catch (Exception e) {
             e.printStackTrace();
-            //进入上传出错页面
-            req.setAttribute("message", "文件上传失败：" + e.getMessage());
+            session.invalidate();
+            return;
         }
+        req.getRequestDispatcher("/message.jsp").forward(req, resp);
+
     }
 
 }

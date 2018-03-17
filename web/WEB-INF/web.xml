@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>Upload</servlet-name>
-        <servlet-class>UploadServlet</servlet-class>
+        <servlet-class>servlet.UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Upload</servlet-name>
