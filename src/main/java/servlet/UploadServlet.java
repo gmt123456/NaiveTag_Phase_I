@@ -40,17 +40,23 @@ public class UploadServlet extends HttpServlet {
         if (!uploadDir.exists()) uploadDir.mkdir();
 
         try {
+            String fileName = null;
+            String filePath = null;
             List<FileItem> formItems = upload.parseRequest(req);
             for (FileItem item: formItems) {
                 if (!item.isFormField()) {
-                    String fileName = new File(item.getName()).getName();
-                    String filePath = uploadPath + File.separator + fileName;
+                    fileName = new File(item.getName()).getName();
+                    filePath = uploadPath + File.separator + fileName;
                     System.out.println(filePath);
                     File storeFile = new File(filePath);
                     item.write(storeFile);
                     req.setAttribute("message", "文件上传成功");
+                    break;
                 }
             }
+            String unzipPath = req.getRealPath("") + Config.UNZIP_PATH + File.separator + fileName;
+            System.out.println(new ZipHelper().unZip(filePath, unzipPath));
+            req.setAttribute("filePath", unzipPath);
         } catch (Exception e) {
             e.printStackTrace();
             //进入上传出错页面

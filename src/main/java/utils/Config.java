@@ -6,6 +6,8 @@
  */
 public class Config {
 
+    public static final String UNZIP_PATH = "File";
+
     public static final String UPLOAD_DIRECTORY = "DataSet";
 
     public static final int MEMORY_THRESHOLD = 1024 * 1024 * 40;
