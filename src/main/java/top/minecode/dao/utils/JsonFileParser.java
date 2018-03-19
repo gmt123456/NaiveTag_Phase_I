@@ -1,4 +1,4 @@
-package utils;
+package top.minecode.dao.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -1,4 +1,4 @@
-package utils;
+package top.minecode.dao.utils.unzip;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,12 +9,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Created on 2018/3/17.
+ * Created on 2018/3/19.
  * Description:
  *
  * @author iznauy
  */
-public class ZipHelper {
+public class ZipHelper implements ZipperHelper {
 
     public boolean unZip(String sourcePath, String outPath) {
 
@@ -31,7 +31,7 @@ public class ZipHelper {
                 if(zipEntry.isDirectory()) targetFile.mkdirs();
                 else{
                     FileOutputStream out = new FileOutputStream(targetFile);
-                    byte[] buff = new byte[Config.ZIPPER_BUFF_SIZE];
+                    byte[] buff = new byte[ZipperConfig.ZIPPER_BUFF_SIZE];
                     int length;
                     while((length = zin.read(buff)) != -1){
                         out.write(buff, 0, length);
