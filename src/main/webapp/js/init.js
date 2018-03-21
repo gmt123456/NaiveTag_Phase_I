@@ -1,6 +1,7 @@
 
 //初始化label
 window.onload = function () {
+    labelType = "noTagHead";
     var labellist1 = new Array("呆滞","开心","激动","无语","略略略");
     newCollapseLeft("心情", labellist1);
     var labellist2 = new Array("蓝色","绿色","灰不拉几","黄不拉几");
