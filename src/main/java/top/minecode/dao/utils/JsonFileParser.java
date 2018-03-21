@@ -24,24 +24,19 @@ public class JsonFileParser {
         json = parser.parse(new FileReader(path)).getAsJsonObject();
     }
 
-    public int getTaskType() {
-        return json.get("task-type").getAsInt();
+    public String getString(String key) {
+        return json.get(key).getAsString();
     }
 
-    public String getFormat() {
-        return json.get("format").getAsString();
+    public int getInteger(String key) {
+        return json.get(key).getAsInt();
     }
 
-    public String getDescription() {
-        return json.get("description").getAsString();
+    public List<String> getStringList(String key) {
+        JsonArray array = json.getAsJsonArray(key);
+        List<String> list = new ArrayList<String>();
+        for (JsonElement element: array)
+            list.add(element.getAsString());
+        return list;
     }
-
-    public List<String> getClasses() {
-        JsonArray array = json.getAsJsonArray("classes");
-        List<String> classes = new ArrayList<String>();
-        for (JsonElement cls: array)
-            classes.add(cls.getAsString());
-        return classes;
-    }
-
 }

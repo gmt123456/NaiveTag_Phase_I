@@ -9,11 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 import top.minecode.Config;
 import top.minecode.exception.FailToUnzipException;
 import top.minecode.exception.WrongDataSetFormatException;
+import top.minecode.exception.WrongTaskFileException;
 import top.minecode.service.UploadDataSetService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created on 2018/3/19.
@@ -38,7 +40,7 @@ public class UploadDataSetController {
 
     @RequestMapping(value = "/uploadCheck.html")
     public ModelAndView uploadDataSet(HttpServletRequest request,
-                                      @RequestParam MultipartFile dataSet) throws Exception {
+                                      @RequestParam MultipartFile dataSet){
         boolean emptyFile = dataSet.isEmpty();
         if (emptyFile)
             return new ModelAndView("upload", "error", "文件不能为空");
@@ -51,7 +53,13 @@ public class UploadDataSetController {
         File filePath = new File(path + fileName);
 
         if (!filePath.getParentFile().exists()) filePath.getParentFile().mkdirs();
-        dataSet.transferTo(filePath);
+
+        try {
+            dataSet.transferTo(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ModelAndView("upload", "error", "文件解压失败");
+        }
 
         try {
             uploadDataSetService.unZipRawImages(filePath.getAbsolutePath());
@@ -59,6 +67,8 @@ public class UploadDataSetController {
             return new ModelAndView("upload", "error", "文件格式不正确");
         } catch (FailToUnzipException e) {
             return new ModelAndView("upload", "error", "文件解压缩失败");
+        } catch (WrongTaskFileException e) {
+            return new ModelAndView("upload", "error", "不正确的task描述");
         }
 
         HttpSession session = request.getSession(true);

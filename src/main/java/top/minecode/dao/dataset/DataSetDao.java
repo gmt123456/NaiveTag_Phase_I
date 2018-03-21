@@ -6,6 +6,7 @@ import top.minecode.dao.utils.unzip.ZipperFactory;
 import top.minecode.dao.utils.unzip.ZipperHelper;
 import top.minecode.exception.FailToUnzipException;
 import top.minecode.exception.WrongDataSetFormatException;
+import top.minecode.exception.WrongTaskFileException;
 
 import java.io.File;
 
@@ -44,7 +45,11 @@ public class DataSetDao {
         return jsonFile.exists() && dataFile.exists() && dataFile.isDirectory();
     }
 
-    public void unZipRawImages(String rawImages) throws FailToUnzipException, WrongDataSetFormatException {
+    private boolean validJsonFileStructure(String fileName) {
+        return new TaskFileValidator(fileName).validTask();
+    }
+
+    public void unZipRawImages(String rawImages) throws WrongTaskFileException, FailToUnzipException, WrongDataSetFormatException {
         // 获取目标路径和格式
         String target = getTargetPath(rawImages);
         String format = getZipFileFormat(rawImages);
@@ -59,9 +64,14 @@ public class DataSetDao {
 
         String fileName = new File(rawImages).getName();
         fileName = fileName.substring(0, fileName.length() - format.length());
-        if (!validFileStructure(target + fileName + File.separator))
+
+        String dataSetFilePath = target + fileName + File.separator;
+
+        if (!validFileStructure(dataSetFilePath))
             throw new WrongDataSetFormatException();
 
+        if (!validFileStructure(dataSetFilePath + "task.json"))
+            throw new WrongTaskFileException();
     }
 
 
