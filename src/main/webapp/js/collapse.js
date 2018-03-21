@@ -11,6 +11,8 @@ var arrayleft = new Array();
 var targetIndex;//被选中的card
 var labelnum = 1;//接受的标签数量
 
+var labelType = "noTagHead";//or "TagHead"
+
 
 function onclicklabelleft(id) {
 	var label = document.getElementById(id).cloneNode(true)
@@ -19,15 +21,16 @@ function onclicklabelleft(id) {
 	var newID = "TagHead" + TagHeadIndex + "-" + labelIndex +"_block-card-right-" + targetIndex;
 	label.setAttribute("id",newID);
 	label.setAttribute("onclick","onclicklabelright(id)");
-	arrayright[targetIndex].addTagLabel(label);
+	if(labelType == "noTagHead"){
+        arrayright[targetIndex].addLabel(label);
+	}else if(labelType == "TagHead"){
+        arrayright[targetIndex].addTagLabel(label);
+	}
 }
 
 function onclicklabelright(id) {
-	var del = id.split("_")[0].split("-")[1];
-	var tagID = id.replace("-"+del,"");
-	var tagHead = document.getElementById(tagID);
-	var div = tagHead.getElementsByTagName("div")[0];
-	div.innerHTML = "";
+	var ID = "#" + id;
+    $(ID).remove();
 }
 
 function onclickcollapse(id){
@@ -42,6 +45,7 @@ function onclickcollapse(id){
 }
 
 function Label(name,id) {
+	this.name = name;
 
 	this.label = document.createElement("span");
 	this.label.setAttribute("id", id);
@@ -144,18 +148,43 @@ function Collapse(id, cardbodyID, name){
         this.card.setAttribute("style","");
     }
 
-	this.addLabel = function(name){
-		//增加左方标签
-		var id = this.labelArray.length;
-		var labelID = "Label"+id+"_"+block.getAttribute("id");
-		var label = new Label(name,labelID);
-        label.label.setAttribute("onclick","onclicklabelleft(id)");
-		block.appendChild(label.label);
-        this.labelArray.push(label);
+	this.addLabel = function(label){
+		//增加普通标签
+		var isString = false;
+		var name;
+		if(typeof(label) == typeof("")) {
+            isString = true;
+            name = label;
+        }else{
+			name = label.innerHTML;
+		}
+		var repeat = false;
+		for(var value in this.labelArray){
+			if(this.labelArray[value].name == name){
+				repeat = true;
+				break;
+			}
+		}
+		if(!repeat){
+			if(isString){
+                var id = this.labelArray.length;
+                var labelID = "Label"+id+"_"+block.getAttribute("id");
+                var label = new Label(name,labelID);
+                label.label.setAttribute("onclick","onclicklabelleft(id)");
+			}else {
+                var labelID = label.getAttribute("id");
+                var label = new Label(name,labelID);
+                label.label.setAttribute("onclick","onclicklabelright(id)");
+            }
+
+            block.appendChild(label.label);
+            this.labelArray.push(label);
+		}
+
 	}
 
 	this.addTagLabel = function (label) {
-		//增加右方标签
+		//增加有属性头的标签
 		var tagID = parseInt(label.getAttribute("id").split("_")[0].split("-")[0].replace("TagHead",""));
 		var tag = this.tagArray[tagID];
 		tag.addlab(label);
@@ -189,10 +218,13 @@ function pushCollapse(){
 	var cardbodyID = cardbodyright.getAttribute("id");
 	var collapseID = cardbodyID + "-" + arrayright.length;
 	var collapse = new Collapse(collapseID, cardbodyID,"");
-	for(var i = 0;i < arrayleft.length;i++){
-		var type = arrayleft[i].name;
-        collapse.addTagHead(type);
-	}
+
+    if(labelType == "TagHead"){
+        for(var i = 0;i < arrayleft.length;i++){
+            var type = arrayleft[i].name;
+            collapse.addTagHead(type);
+        }
+    }
 
     cardbodyright.appendChild(collapse.card);
     arrayright.push(collapse);
@@ -209,13 +241,5 @@ function popCollapse(){
         cardbodyright.removeChild(delchild);
         arrayright.pop();
 
-	}
-}
-
-function delCollapse(){
-	//清空手风琴
-    cardbodyright.innerHTML = "";
-	for (var card in arrayright){
-        arrayright.pop();
 	}
 }
