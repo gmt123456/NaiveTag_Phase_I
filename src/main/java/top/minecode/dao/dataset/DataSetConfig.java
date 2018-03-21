@@ -28,12 +28,12 @@ class DataSetConfig {
         WITH_CLASS_PROBLEMS.add(101);
         WITH_CLASS_PROBLEMS.add(201);
         WITH_CLASS_PROBLEMS.add(301);
-        WITH_CLASS_PROBLEMS.add(400);
         WITH_CLASS_PROBLEMS.add(401);
 
         WITHOUT_CLASS_PROBLEMS.add(100);
         WITHOUT_CLASS_PROBLEMS.add(200);
         WITHOUT_CLASS_PROBLEMS.add(300);
+        WITHOUT_CLASS_PROBLEMS.add(400);
     }
 
 }

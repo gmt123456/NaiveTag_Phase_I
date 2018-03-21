@@ -20,12 +20,6 @@ import java.io.File;
 @Repository
 public class DataSetDao {
 
-    public boolean zipFile(String source, String target, String format) {
-        ZipperFactory factory = new ZipperFactory(format);
-        ZipperHelper helper = factory.getZipperHelper();
-        return helper.unZip(source, target);
-    }
-
     private String getTargetPath(String rawPath) {
         String parentPath = new File(rawPath).getParentFile().getParent();
         return parentPath + File.separator + Config.UNZIPPED_FILE_PATH + File.separator;
@@ -39,7 +33,6 @@ public class DataSetDao {
     }
 
     private boolean validFileStructure(String fileName) {
-        System.out.println(fileName);
         File jsonFile = new File(fileName + "task.json");
         File dataFile = new File(fileName + "data");
         return jsonFile.exists() && dataFile.exists() && dataFile.isDirectory();
@@ -70,7 +63,7 @@ public class DataSetDao {
         if (!validFileStructure(dataSetFilePath))
             throw new WrongDataSetFormatException();
 
-        if (!validFileStructure(dataSetFilePath + "task.json"))
+        if (!validJsonFileStructure(dataSetFilePath + "task.json"))
             throw new WrongTaskFileException();
     }
 

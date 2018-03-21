@@ -8,11 +8,11 @@ import top.minecode.dao.utils.JsonFileParser;
  *
  * @author iznauy
  */
-public class TaskFileValidator {
+class TaskFileValidator {
 
     private JsonFileParser parser;
 
-    public TaskFileValidator(String fileName) {
+    TaskFileValidator(String fileName) {
         try {
             parser = new JsonFileParser(fileName);
         } catch (Exception e) {
@@ -21,7 +21,7 @@ public class TaskFileValidator {
         }
     }
 
-    public boolean validTask() {
+    boolean validTask() {
 
         if (parser == null || parser.getString(DataSetConfig.FORMAT) == null || parser.getString(DataSetConfig.DESCRIPTION) == null)
             return false;
