@@ -9,11 +9,15 @@ import org.springframework.web.servlet.ModelAndView;
 import top.minecode.Config;
 import top.minecode.exception.FailToUnzipException;
 import top.minecode.exception.WrongDataSetFormatException;
+import top.minecode.exception.WrongTaskFileException;
 import top.minecode.service.UploadDataSetService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created on 2018/3/19.
@@ -38,7 +42,7 @@ public class UploadDataSetController {
 
     @RequestMapping(value = "/uploadCheck.html")
     public ModelAndView uploadDataSet(HttpServletRequest request,
-                                      @RequestParam MultipartFile dataSet) throws Exception {
+                                      @RequestParam MultipartFile dataSet){
         boolean emptyFile = dataSet.isEmpty();
         if (emptyFile)
             return new ModelAndView("upload", "error", "文件不能为空");
@@ -47,11 +51,18 @@ public class UploadDataSetController {
             return new ModelAndView("upload", "error", "不支持的文件格式");
 
         String path = request.getSession().getServletContext().getRealPath(Config.RAW_FILE_PATH) + File.separator;
+
         String fileName = dataSet.getOriginalFilename();
         File filePath = new File(path + fileName);
 
         if (!filePath.getParentFile().exists()) filePath.getParentFile().mkdirs();
-        dataSet.transferTo(filePath);
+
+        try {
+            dataSet.transferTo(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ModelAndView("upload", "error", "文件解压失败");
+        }
 
         try {
             uploadDataSetService.unZipRawImages(filePath.getAbsolutePath());
@@ -59,12 +70,24 @@ public class UploadDataSetController {
             return new ModelAndView("upload", "error", "文件格式不正确");
         } catch (FailToUnzipException e) {
             return new ModelAndView("upload", "error", "文件解压缩失败");
+        } catch (WrongTaskFileException e) {
+            return new ModelAndView("upload", "error", "不正确的task描述");
         }
 
         HttpSession session = request.getSession(true);
-        session.setAttribute("path", request.getContextPath() + "/" + Config.UNZIPPED_FILE_PATH + "/"
-            + fileName.substring(0, fileName.lastIndexOf('.')) + File.separator);
-        System.out.println(session.getAttribute("path"));
+        String relatedPath = Config.UNZIPPED_FILE_PATH + "/"
+                + fileName.substring(0, fileName.lastIndexOf('.')) + "/";
+        session.setAttribute("path", relatedPath);
+
+        String parentPath = filePath.getParentFile().getParent();
+
+        fileName = fileName.substring(0, fileName.lastIndexOf("."));
+        String target = parentPath + File.separator +
+                Config.UNZIPPED_FILE_PATH + File.separator + fileName + File.separator + "data";
+
+        List<String> imageNames = Arrays.asList(new File(target).list());
+
+        session.setAttribute("picList", imageNames);
         return new ModelAndView("oj");
     }
 

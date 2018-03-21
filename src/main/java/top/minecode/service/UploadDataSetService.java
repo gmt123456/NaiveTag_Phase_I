@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import top.minecode.dao.dataset.DataSetDao;
 import top.minecode.exception.FailToUnzipException;
 import top.minecode.exception.WrongDataSetFormatException;
+import top.minecode.exception.WrongTaskFileException;
 
 /**
  * Created on 2018/3/19.
@@ -29,7 +30,7 @@ public class UploadDataSetService {
         return false;
     }
 
-    public void unZipRawImages(String filePath) throws WrongDataSetFormatException, FailToUnzipException {
+    public void unZipRawImages(String filePath) throws WrongTaskFileException, WrongDataSetFormatException, FailToUnzipException {
         dataSetDao.unZipRawImages(filePath);
     }
 }

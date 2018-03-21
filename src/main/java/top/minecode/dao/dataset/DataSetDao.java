@@ -6,6 +6,7 @@ import top.minecode.dao.utils.unzip.ZipperFactory;
 import top.minecode.dao.utils.unzip.ZipperHelper;
 import top.minecode.exception.FailToUnzipException;
 import top.minecode.exception.WrongDataSetFormatException;
+import top.minecode.exception.WrongTaskFileException;
 
 import java.io.File;
 
@@ -18,12 +19,6 @@ import java.io.File;
 
 @Repository
 public class DataSetDao {
-
-    public boolean zipFile(String source, String target, String format) {
-        ZipperFactory factory = new ZipperFactory(format);
-        ZipperHelper helper = factory.getZipperHelper();
-        return helper.unZip(source, target);
-    }
 
     private String getTargetPath(String rawPath) {
         String parentPath = new File(rawPath).getParentFile().getParent();
@@ -38,13 +33,16 @@ public class DataSetDao {
     }
 
     private boolean validFileStructure(String fileName) {
-        System.out.println(fileName);
         File jsonFile = new File(fileName + "task.json");
         File dataFile = new File(fileName + "data");
         return jsonFile.exists() && dataFile.exists() && dataFile.isDirectory();
     }
 
-    public void unZipRawImages(String rawImages) throws FailToUnzipException, WrongDataSetFormatException {
+    private boolean validJsonFileStructure(String fileName) {
+        return new TaskFileValidator(fileName).validTask();
+    }
+
+    public void unZipRawImages(String rawImages) throws WrongTaskFileException, FailToUnzipException, WrongDataSetFormatException {
         // 获取目标路径和格式
         String target = getTargetPath(rawImages);
         String format = getZipFileFormat(rawImages);
@@ -59,9 +57,14 @@ public class DataSetDao {
 
         String fileName = new File(rawImages).getName();
         fileName = fileName.substring(0, fileName.length() - format.length());
-        if (!validFileStructure(target + fileName + File.separator))
+
+        String dataSetFilePath = target + fileName + File.separator;
+
+        if (!validFileStructure(dataSetFilePath))
             throw new WrongDataSetFormatException();
 
+        if (!validJsonFileStructure(dataSetFilePath + "task.json"))
+            throw new WrongTaskFileException();
     }
 
 
