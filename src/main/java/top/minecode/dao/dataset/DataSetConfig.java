@@ -12,7 +12,7 @@ import java.util.Set;
  */
 class DataSetConfig {
 
-    static final String TASK_TYPE = "task-type";
+    static final String TASK_TYPE = "taskType";
 
     static final String FORMAT = "format";
 
