@@ -18,43 +18,51 @@
 
   </head>
   <body>
-
     <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-12">
-						<form role="form">
-							<div class="form-group">
+			<nav class="navbar navbar-toggleable-md navbar-light bg-faded navbar-inverse bg-inverse" style="height: 60px">
+				<h4 style="color: white;width: 120px;">
+					任务描述：
+				</h4>
+				<div id="description" style="color: white;font-family: Tahoma">
 
-								<label for="exampleInputEmail1">
-									Email address
-								</label>
-								<input class="form-control" id="exampleInputEmail1" type="email" />
-							</div>
-							<div class="form-group">
-
-								<label for="exampleInputPassword1">
-									Password
-								</label>
-								<input class="form-control" id="exampleInputPassword1" type="password" />
-							</div>
-						</form>
-					</div>
 				</div>
-			</div>
+			</nav>
+
 			<div class="row">
 				<div class="col-md-2">
-					 
 					<p></p>
+					<button id="polygon" class="btn btn-outline-primary btn-block" type="button">
+						画线
+					</button>
 					<button id="toggle" class="btn btn-outline-primary btn-block" type="button">
 						矩形
 					</button>
-					<button id="back" class="btn btn-outline-primary btn-block" type="button">
+					<button id="backR" class="btn btn-outline-primary btn-block" type="button">
 						回退
 					</button>
-					
+					<button id="backP" class="btn btn-outline-primary btn-block" type="button">
+						回退
+					</button>
+
+					<p></p>
+
+					<div class="row">
+						<div class="col-md-6">
+
+							<button id="last" class="btn btn-block btn-outline-primary" type="button">
+								上一个
+							</button>
+						</div>
+						<div class="col-md-6">
+
+							<button id="next" class="btn btn-block btn-outline-primary" type="button">
+								下一个
+							</button>
+						</div>
+					</div>
+
 					<p></p>
 					
 					<h4>Choose Tags:</h4>
@@ -65,7 +73,7 @@
 				
 				<!--画布部分-->
 				<div class="col-md-8 column" >
-					<canvas id="canvas" width="1000" height="700" style="border:1px solid #d3d3d3;background-image: url('image/greenandblue.jpg');background-size:1000px 700px;" ondragstart="return false;" oncontextmenu="return false;"></canvas>
+					<canvas id="canvas" width="1000" height="700" style="border:1px solid #d3d3d3;background-size:1000px 700px;" ondragstart="return false;" oncontextmenu="return false;"></canvas>
 		        </div>
 				
 		        <!--右侧手风琴切换部分-->
@@ -91,6 +99,8 @@
     <script src="js/init.js"></script>
 	<script src="js/drawrect.js"></script>
 	<script src="js/collapse.js"></script>
+	<script src="js/inputbox.js"></script>
+	<script src="js/drawPolygon.js"></script>
 	
   </body>
 </html>

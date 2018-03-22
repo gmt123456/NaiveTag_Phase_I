@@ -2,6 +2,25 @@
  * Created by 陈俊宇 on 2018/3/18.
  */
 
+var stopCollapse = false;
+var onlyOnce = false;
+var useInputBox = false;
+
+function popThingsRight() {
+    if(useInputBox){
+        popInputBox()
+    }else{
+        popCollapse();
+    }
+}
+function pushThingsRight() {
+    if(useInputBox){
+        addInputBox()
+    }else{
+        pushCollapse();
+    }
+}
+
 function Rect(x, y, x1, y1) {
     this.x = Math.min(x, x1);
     this.y = Math.min(y, y1);
@@ -13,55 +32,67 @@ function Point(x, y) {
     this.y = y;
 }
 
-$(function () {
+var disableRect = true;
+
+//$(function () {
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    var isDrawing = false;
-    var disable = true;
-    var x = 0;
-    var y = 0;
-    var array = new Array();
-    var index;              //被选中的矩形在array中的索引
+    var isDrawingRect = false;
+
+    var xRect = 0;
+    var yRect = 0;
+    var arrayRect = new Array();
+    var indexRect;              //被选中的矩形在array中的索引
 
 
     $('#canvas').mousedown(function (e) {
-        if (!disable) {
-            isDrawing = true;
+        if (!disableRect) {
+            isDrawingRect = true;
             newOne = true;
-            x = e.offsetX;
-            y = e.offsetY;
+            xRect = e.offsetX;
+            yRect = e.offsetY;
         }
 
     }).mouseup(function (e) {
-        if (!disable) {
-            isDrawing = false;
-            array.push(new Rect(x, y, e.offsetX, e.offsetY));
-            pushCollapse();//added by gmt in 2018/3/18
+        if (!disableRect) {
+            isDrawingRect = false;
+            if(onlyOnce){//added by gmt in 2018/3/21
+                if(arrayRect.length > 0){
+                    arrayRect.pop();
+                    popThingsRight();
+                }
+            }
+            arrayRect.push(new Rect(xRect, yRect, e.offsetX, e.offsetY));
+            if(!stopCollapse){//added by gmt in 2018/3/18
+                pushThingsRight();
+            }
+            drawRect();//added by gmt in 2018/3/21
         }
     }).mousemove(function (e) {
-        if (isDrawing && !disable) {
+        if (isDrawingRect && !disableRect) {
             drawRect();
-            ctx.strokeRect(x, y, e.offsetX - x, e.offsetY - y);
-            drawText(array.length + 1 + "", x, y);//added by gmt in 2018/3/19
+            ctx.strokeRect(xRect, yRect, e.offsetX - xRect, e.offsetY - yRect);
+            drawText(arrayRect.length + 1 + "", xRect, yRect);//added by gmt in 2018/3/19
         }
     }).click(function (e) {
-        if (disable) {
+        if (disableRect) {
             if (findRect(e.offsetX, e.offsetY, 5)) {
                 drawRect();
-
+                onclickcollapse("card-right-" + indexRect);//added by gmt in 2018/3/21
             } else {
-                index = -1;
+                indexRect = -1;
             }
-            console.log("index= " + index);
+
+            console.log("index= " + indexRect);
         }
 
     });
 
     function findRect(x, y, tolerance) {
-        for (v in array) {
-            var item = array[v];
+        for (v in arrayRect) {
+            var item = arrayRect[v];
             if (onRect(x, y, item)) {
-                index = v;
+                indexRect = v;
                 console.log("v= " + v);
                 return true;
             }
@@ -71,9 +102,9 @@ $(function () {
 
     function drawRect() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var value in array) {
-            var rect = array[value];
-            if (value === index) {
+        for (var value in arrayRect) {
+            var rect = arrayRect[value];
+            if (value === indexRect) {
                 ctx.save();
                 ctx.strokeStyle = 'rgb(255,0,0)';
                 ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -111,11 +142,11 @@ $(function () {
 
 
     $("#toggle").click(function () {
-        disable = !disable;
+        disableRect = !disableRect;
         index = -1;
         drawRect();
 
-        if(!disable){//added by gmt in 2018/3/19
+        if(!disableRect){//added by gmt in 2018/3/19
             document.getElementById("toggle").setAttribute("class","btn active btn-block btn-outline-primary");
         }else
             document.getElementById("toggle").setAttribute("class","btn btn-block btn-outline-primary");
@@ -130,9 +161,12 @@ $(function () {
         ctx.fillText(text+"", x, y);
     }
 
-    $("#back").click(function () {
-        array.pop();
+    $("#backR").click(function () {
+        arrayRect.pop();
         drawRect();
-        popCollapse();//added by gmt in 2018/3/18
+        if(!stopCollapse){
+            popThingsRight();//added by gmt in 2018/3/18
+        }
+
     })
-})
+//})
