@@ -42,12 +42,19 @@ public class DataSetDao {
         return new TaskFileValidator(fileName).validTask();
     }
 
+    /**
+     * Unzip the data set uploaded
+     * @param rawImages path and format of the data set
+     * @throws WrongTaskFileException task.json is not correct
+     * @throws FailToUnzipException failed to unzip the data set
+     * @throws WrongDataSetFormatException the file structure in the zip is incorrect
+     */
     public void unZipRawImages(String rawImages) throws WrongTaskFileException, FailToUnzipException, WrongDataSetFormatException {
-        // 获取目标路径和格式
+        // Get path and format of target
         String target = getTargetPath(rawImages);
         String format = getZipFileFormat(rawImages);
 
-        //构造解压器
+        // Construct the zipper
         ZipperFactory factory = new ZipperFactory(format);
         ZipperHelper helper = factory.getZipperHelper();
 
