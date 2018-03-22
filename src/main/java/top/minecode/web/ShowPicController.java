@@ -28,8 +28,12 @@ public class ShowPicController {
         String suffix = (String) session.getAttribute("path");
 
         List<String> result = new ArrayList<String>();
-        for (int i = index; i < index + count; i++)
+        int length = pathList.size();
+        for (int i = index; i < index + count; i++){
+            if (length >= i)
+                break;
             result.add(suffix + "data/" + pathList.get(i));
+        }
 
         Gson gson = new Gson();
         return gson.toJson(result);
