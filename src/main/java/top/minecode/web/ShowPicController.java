@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class ShowPicController {
     public String getPicList(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         if (session == null)
-            return;
+            return null;
 
         int index = (Integer) request.getAttribute("index");
         int count = (Integer) request.getAttribute("count");
