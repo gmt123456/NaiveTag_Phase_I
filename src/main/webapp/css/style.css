@@ -1,1 +1,37 @@
-# Empty CSS file for your own CSS
+.img-box {
+    float: left;
+    margin: 20px;
+}
+
+.upload {
+    /*float: none;*/
+    /*display: block;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.margin {
+    margin: 20px;
+}
+
+.vertical-gap {
+    margin-bottom: 20px;
+}
+
+.border-left-only {
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+}
+
+.border-right-only {
+    border-left: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+}
