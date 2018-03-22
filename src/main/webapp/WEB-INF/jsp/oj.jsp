@@ -17,21 +17,23 @@
             var item;
             var xmlHttp=new XMLHttpRequest();
             $("#img-container").append('<div class="img-row">');
-            for (i = 0; i < 20; i++) {
+            for (i = 0; i < 60; i++) {
                 var src = "Images/image/data/" + a + ".jpg";
                 item = '<div class="img-box"><a href="index.htm"><img src="' + src + '"></a></div>';
                 $("#img-container").append(item);
-//                if(a===160150104){
-//                    a=161060001;
-//                    continue;
-//                }
+              
                 a++;
             }
 
-            xmlHttp.onreadystatechange
+            xmlHttp.onreadystatechange=function () {
+                if (xmlHttp.readyState==4&&xmlHttp.status==200){
+                    console.log(xmlHttp.responseText);
+                }
+            }
             
             $('#loadPic').click(function () {
-
+                xmlHttp.open("GET","/naive/dataList.html",true);
+                xmlHttp.send();
             })
         })
     </script>
