@@ -18,7 +18,7 @@
             var xmlHttp=new XMLHttpRequest();
             $("#img-container").append('<div class="img-row">');
             for (i = 0; i < 60; i++) {
-                var src = "Images/image/data/" + a + ".jpg";
+                var src = "Images/image1/data/" + a + ".jpg";
                 item = '<div class="img-box"><a href="index.htm"><img src="' + src + '"></a></div>';
                 $("#img-container").append(item);
               
@@ -32,7 +32,7 @@
             }
             
             $('#loadPic').click(function () {
-                xmlHttp.open("GET","/naive/dataList.html",true);
+                xmlHttp.open("GET","/naive/dataList.html?index=1&count=2",true);
                 xmlHttp.send();
             })
         })
