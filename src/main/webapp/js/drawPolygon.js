@@ -16,9 +16,12 @@ function Polygon() {
     this.set = new Array();
 }
 
-$(function () {
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
+var disableLine = true;
+var onlyOneLine = true;
+
+//$(function () {
+    //var canvas = document.getElementById('canvas');
+    //var ctx = canvas.getContext('2d');
     var isDrawing = false;
     var newOne = false;
     var x = 0;
@@ -29,26 +32,40 @@ $(function () {
 
 
     $('#canvas').mousedown(function (e) {
-        isDrawing = true;
-        x = e.offsetX;
-        y = e.offsetY;
-        polygon = new Polygon();
-
+        if (!disableLine) {
+            isDrawing = true;
+            x = e.offsetX;
+            y = e.offsetY;
+            polygon = new Polygon();
+        }
     }).mouseup(function (e) {
-        isDrawing = false;
-        polygon.set.push(new Point(e.offsetX, e.offsetY));
-        array.push(polygon);
-        drawPolygon();
-        console.log("points " + polygon.set.length);
-    }).mousemove(function (e) {
-        if (isDrawing) {
-            count++;
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
+        if (!disableLine) {
+            isDrawing = false;
+            if(onlyOneLine){//added by gmt in 2018/3/22
+                if(array.length > 0){
+                    array.pop();
+                    popThingsRight();
+                }
+            }
             polygon.set.push(new Point(e.offsetX, e.offsetY));
-        } else {
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
+            array.push(polygon);
+            if(!stopCollapse){//added by gmt in 2018/3/22
+                pushThingsRight();
+            }
+            drawPolygon();
+            console.log("points " + polygon.set.length);
+        }
+    }).mousemove(function (e) {
+        if (!disableLine) {
+            if (isDrawing) {
+                count++;
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                polygon.set.push(new Point(e.offsetX, e.offsetY));
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(e.offsetX, e.offsetY);
+            }
         }
     });
 
@@ -68,8 +85,21 @@ $(function () {
         }
     }
 
-    $("#back").click(function () {
-        array.pop();
-        drawRect();
+    $("#polygon").click(function () {
+        disableLine = !disableLine;
+        drawPolygon();
+
+        if(!disableLine){//added by gmt in 2018/3/19
+            document.getElementById("polygon").setAttribute("class","btn active btn-block btn-outline-primary");
+        }else
+            document.getElementById("polygon").setAttribute("class","btn btn-block btn-outline-primary");
     })
-})
+
+    $("#backP").click(function () {
+        array.pop();
+        drawPolygon();
+        if(!stopCollapse){
+            popThingsRight();//added by gmt in 2018/3/22
+        }
+    })
+//})

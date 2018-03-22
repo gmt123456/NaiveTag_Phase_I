@@ -22,6 +22,8 @@ function onclicklabelleft(id) {
 	label.setAttribute("id",newID);
 	label.setAttribute("onclick","onclicklabelright(id)");
 	if(labelType == "noTagHead"){
+        labelIndex = arrayright[targetIndex].labelArray.length;
+        label.setAttribute("id","noTagHead" + TagHeadIndex + "-Label" + labelIndex +"_block-card-right-" + targetIndex);
         arrayright[targetIndex].addLabel(label);
 	}else if(labelType == "TagHead"){
         arrayright[targetIndex].addTagLabel(label);
@@ -29,6 +31,16 @@ function onclicklabelleft(id) {
 }
 
 function onclicklabelright(id) {
+	var labelIndex;
+	var targetIndex;
+	var labelarray;
+	if(labelType === "noTagHead"){
+        targetIndex = parseInt(id.split("-")[4]);
+        labelIndex = parseInt(id.split("_")[0].split("-")[0].replace("noTagHead",""));
+        labelarray = arrayright[targetIndex].labelArray;
+        labelarray.splice(labelIndex, 1);
+	}
+
 	var ID = "#" + id;
     $(ID).remove();
 }
@@ -41,7 +53,10 @@ function onclickcollapse(id){
 	var target = document.getElementById(id+"");
     target.setAttribute("style","box-shadow:0 0 8px rgba(2, 117,216,0.8);");
     targetIndex = id.split("-")[2];
-
+    if (disableRect) {
+        findRect(arrayRect[targetIndex].x, arrayRect[targetIndex].y, 5);
+        drawRect();
+    }
 }
 
 function Label(name,id) {
@@ -152,7 +167,7 @@ function Collapse(id, cardbodyID, name){
 		//增加普通标签
 		var isString = false;
 		var name;
-		if(typeof(label) == typeof("")) {
+		if(typeof(label) === typeof("")) {
             isString = true;
             name = label;
         }else{
@@ -171,23 +186,34 @@ function Collapse(id, cardbodyID, name){
                 var labelID = "Label"+id+"_"+block.getAttribute("id");
                 var label = new Label(name,labelID);
                 label.label.setAttribute("onclick","onclicklabelleft(id)");
-			}else {
+                block.appendChild(label.label);
+                this.labelArray.push(label);
+			}else if(this.labelArray.length < labelnum){
                 var labelID = label.getAttribute("id");
                 var label = new Label(name,labelID);
                 label.label.setAttribute("onclick","onclicklabelright(id)");
+                block.appendChild(label.label);
+                this.labelArray.push(label);
             }
 
-            block.appendChild(label.label);
-            this.labelArray.push(label);
 		}
 
 	}
 
 	this.addTagLabel = function (label) {
 		//增加有属性头的标签
-		var tagID = parseInt(label.getAttribute("id").split("_")[0].split("-")[0].replace("TagHead",""));
-		var tag = this.tagArray[tagID];
-		tag.addlab(label);
+        var repeat = false;
+        for(var value in this.tagArray){
+            if(this.tagArray[value].name == name){
+                repeat = true;
+                break;
+            }
+        }
+        if(!repeat){
+            var tagID = parseInt(label.getAttribute("id").split("_")[0].split("-")[0].replace("TagHead",""));
+            var tag = this.tagArray[tagID];
+            tag.addlab(label);
+        }
     }
 
 	this.addTagHead= function(type) {
