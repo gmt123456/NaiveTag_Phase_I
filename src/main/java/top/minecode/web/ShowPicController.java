@@ -19,7 +19,7 @@ public class ShowPicController {
 
     @RequestMapping("/dataList.html")
     public @ResponseBody String getPicList(HttpServletRequest request,
-                                           @RequestParam int index, @RequestParam int count) throws Exception {
+                                           @RequestParam int beginIndex, @RequestParam int footstep) throws Exception {
         HttpSession session = request.getSession();
         if (session == null)
             return null;
@@ -29,8 +29,8 @@ public class ShowPicController {
 
         List<String> result = new ArrayList<String>();
         int length = pathList.size();
-        for (int i = index; i < index + count; i++){
-            if (length >= i)
+        for (int i = beginIndex; i < beginIndex + footstep; i++){
+            if (length <= i)
                 break;
             result.add(suffix + "data/" + pathList.get(i));
         }
