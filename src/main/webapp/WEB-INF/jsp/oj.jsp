@@ -8,18 +8,68 @@
 <html>
 <head>
     <title>Title</title>
-    <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="js/loadoutput.js"></script>
+    <script src="js/upload.js"></script>
     <script src="js/ok.js"></script>
+
+
+
 </head>
 <body>
-<div class="container" id="container">
-    <div id="img-container">
+
+<div class=" row" id="container">
+    <div id="img-container" class="col-xl-1">
     </div>
 
     <button id="loadPic" class="btn btn-primary">
         more
     </button>
+
+    <button type="button" id="loadHistoryPic" data-toggle="modal" data-target="#chooseFileModal">
+        查看历史图片
+    </button>
+
+
+    <div class="modal fade" id="chooseFileModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <label class="mx-auto">选择历史文件</label>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- 模态框主体 -->
+
+                <div id="modalBody" class="modal-body">
+                    <form id="uploadForm" class="form-group" method="post" enctype="multipart/form-data">
+                        <input type="file" name="dataSet" id="dataSet" class="form-control" style="display: none" >
+                        <div class="border vertical-gap  input-group" >
+                            <input id="fakeFile" class=" form-control border-right-only " type="text">
+                            <div>
+                                <label class="text-center btn btn-link " onclick="$('input[id=dataSet]').click();">
+                                    选择
+                                </label>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary btn-block" type="submit" value="确定"/>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="attempt">
+    </div>
 </div>
+
+
 </body>
 </html>

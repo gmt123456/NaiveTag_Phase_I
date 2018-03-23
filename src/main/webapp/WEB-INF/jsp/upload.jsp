@@ -14,26 +14,16 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery.min.js"></script>
-    <script>
-        $(function () {
-            $('input[id=dataSet]').change(function () {
-                console.log($(this).val())
-                var paths = $(this).val().split('\\');
-                $('#fakeFile').val(paths[paths.length - 1]);
-            })
-
-
-        })
-    </script>
+    <script src="js/upload.js"></script>
 </head>
 <body>
 <c:if test="${!empty error}">
     <p>错误：${error}，请重新上传</p>
 </c:if>
 
-<div class=" container w-25 upload">
+<div id="uploadContainer" class="container">
     <form class="form-group" method="post" enctype="multipart/form-data" action="<c:url value="uploadCheck.html"/>">
-        <input type="file" name="dataSet" id="dataSet" class="form-control" style="display: none">
+        <input type="file" name="dataSet" id="dataSet" class="form-control" style="display: none" >
         <div class="border vertical-gap  input-group" >
             <input id="fakeFile" class=" form-control border-right-only " type="text">
             <div>

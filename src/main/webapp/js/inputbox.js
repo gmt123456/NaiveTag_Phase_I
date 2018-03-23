@@ -53,7 +53,7 @@ function popInputBox() {
 function delInputBox() {
     //删除全部输入框
     cardbodyright.innerHTML="";
-    for(var i=0;i<boxArray.length;i++){
+    for(var i=0;i<=boxArray.length;i++){
         boxArray.pop();
     }
 }
