@@ -287,7 +287,7 @@ function popCollapse(){
 function delCollapse() {
     //删除全部手风琴
     cardbodyright.innerHTML="";
-    for(var i=0;i<arrayright.length;i++){
+    for(var i=0;i<=arrayright.length;i++){
         arrayright.pop();
     }
 }

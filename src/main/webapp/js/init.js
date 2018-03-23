@@ -5,7 +5,7 @@
  */
 var fileIndex = 0;
 var filePath;//根据fileindex得到的filePath
-var fileNum = 1;//总共多少file
+var fileNum = 2;//总共多少file
 
 var taskType = 100;
 
@@ -13,14 +13,19 @@ var taskType = 100;
 window.onload = function () {
     //需要初始化的有：fileIndex(0)、filePath、fileNum(1)、和json数据：taskType、classes、description
     //例：
+    localStorage.clear();
 
-    taskType = 300;
+    taskType = 301;
     var classes = ["name1", "name2", "name3", "name4"];
     var description = "这是任务描述";
-    filePath = "image/greenandblue.jpg";
 
-    localStorage.clear();
+    fetchImg(fileIndex,1,function (xmlHttp) {
+        var list=xmlHttp.responseText;
+        console.log(list);
+        filePath = list[0];
+    })
     startTask(taskType, classes, description);
+
     /*
     $.getJSON("test.json",function(json){
         taskType = 401;
@@ -99,7 +104,7 @@ function save300(filename, labelnameList, index, rectList, number) {
 function return300(content) {
     if(content == null){
     }else{
-        for(var i in content){
+        for(var i=0;i<content.length;i++){
             var item = content[i];
             var labelname = item["label"];
             var pos = item["pos"];
@@ -112,6 +117,7 @@ function return300(content) {
                 boxArray[i].input.value = labelname;
             }
             var rect = new Rect(pos[0], pos[2], pos[1], pos[3]);
+            alert(arrayRect.length);
             arrayRect.push(rect);
             drawRect();
         }
@@ -192,6 +198,8 @@ function returnData(Index) {
         var json = JSON.parse(localStorage.getItem(Index));
         content = json[filePath];
     }
+    //alert(JSON.stringify(content));
+    //alert(localStorage.getItem(Index+""));
     switch (taskType){
         case 100:
             return100(content);
@@ -355,9 +363,11 @@ $("#last").click(function () {
     if(fileIndex > 0){
         document.getElementById("save").click();
         fileIndex = fileIndex - 1;
+        filePath = "image/greenandblue.jpg";
         setPicture(filePath);
         delAll();
         returnData(fileIndex);
+
     }
 })
 
@@ -365,6 +375,7 @@ $("#next").click(function () {
     if(fileIndex < fileNum - 1){
         document.getElementById("save").click();
         fileIndex = fileIndex + 1;
+        filePath = "image/img_the_scream.jpg";
         setPicture(filePath);
         delAll();
         returnData(fileIndex);
@@ -378,61 +389,116 @@ function delAll() {
     delRect();
 }
 
+function checkCollapse() {
+    for(var i in arrayright){
+        var collapse = arrayright[i];
+        var labelArray = collapse.labelArray;
+        if(labelArray.length === 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
+
+function checkInputBox() {
+    for(var i in boxArray){
+        var inputbox = boxArray[i];
+        if (inputbox.input.value === null || inputbox.input.value === ""){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
+
+function checkRect(){
+    if(arrayRect.length===0){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function checkPolygon() {
+    if(array.length === 0){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 $("#save").click(function () {
     switch (taskType){
         case 100:
-            save100(filePath,arrayright[0].labelArray[0].name,fileIndex);
+            if(checkCollapse()){
+                save100(filePath,arrayright[0].labelArray[0].name,fileIndex);
+            }
             break;
         case 101:
-            if(boxArray[0].input.value==""){
-                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-            }else{
-                boxArray[0].input.setAttribute("style","");
-                save100(filePath,boxArray[0].input.value,fileIndex);
+            if(checkInputBox()){
+                if(boxArray[0].input.value==""){
+                    boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+                }else{
+                    boxArray[0].input.setAttribute("style","");
+                    save100(filePath,boxArray[0].input.value,fileIndex);
+                }
             }
             break;
         case 200:
-            save200(filePath,arrayright[0].labelArray[0].name,fileIndex,arrayRect[0]);
+            if(checkCollapse() && checkRect()){
+                save200(filePath,arrayright[0].labelArray[0].name,fileIndex,arrayRect[0]);
+            }
             break;
         case 201:
-            if(boxArray[0].input.value==""){
-                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-            }else{
-                boxArray[0].input.setAttribute("style","");
-                save200(filePath,boxArray[0].input.value,fileIndex,arrayRect[0]);
+            if(checkInputBox() && checkRect()){
+                if(boxArray[0].input.value==""){
+                    boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+                }else{
+                    boxArray[0].input.setAttribute("style","");
+                    save200(filePath,boxArray[0].input.value,fileIndex,arrayRect[0]);
+                }
             }
             break;
         case 300:
-            var labelnamelist = new Array();
-            for(var i=0;i<arrayright.length;i++){
-                labelnamelist.push(arrayright[i].labelArray[0].name);
+            if(checkCollapse() && checkRect()){
+                var labelnamelist = new Array();
+                for(var i=0;i<arrayright.length;i++){
+                    labelnamelist.push(arrayright[i].labelArray[0].name);
+                }
+                save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             }
-            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             break;
         case 301:
-            var labelnamelist = new Array();
-            for(var i=0;i<boxArray.length;i++){
-                labelnamelist.push(boxArray[i].input.value);
+            if(checkInputBox() && checkRect()){
+                var labelnamelist = new Array();
+                for(var i=0;i<boxArray.length;i++){
+                    labelnamelist.push(boxArray[i].input.value);
+                }
+                save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             }
-            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             break;
         case 400:
-            var pointlist = array[0].set;
-            var number = pointlist.length;
-            if(number%2!=0){
-                pointlist.pop();
-                number--;
+            if(checkPolygon()){
+                var pointlist = array[0].set;
+                var number = pointlist.length;
+                if(number%2!=0){
+                    pointlist.pop();
+                    number--;
+                }
+                save400(filePath,fileIndex,pointlist,number);
             }
-            save400(filePath,fileIndex,pointlist,number);
             break;
         case 401:
-            var pointlist = array[0].set;
-            var number = pointlist.length;
-            if(number%2!=0){
-                pointlist.pop();
-                number--;
+            if(checkPolygon()){
+                var pointlist = array[0].set;
+                var number = pointlist.length;
+                if(number%2!=0){
+                    pointlist.pop();
+                    number--;
+                }
+                save401(filePath,arrayright[0].labelArray[0].name,fileIndex,pointlist,number);
             }
-            save401(filePath,arrayright[0].labelArray[0].name,fileIndex,pointlist,number);
             break;
         default:
             break;
