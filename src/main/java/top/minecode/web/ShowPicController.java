@@ -19,7 +19,8 @@ public class ShowPicController {
 
     @RequestMapping("/dataList.html")
     public @ResponseBody String getPicList(HttpServletRequest request,
-                                           @RequestParam int beginIndex, @RequestParam int footstep) throws Exception {
+                                           @RequestParam int beginIndex,
+                                           @RequestParam int footstep) throws Exception {
         HttpSession session = request.getSession();
         if (session == null)
             return null;
@@ -29,10 +30,18 @@ public class ShowPicController {
 
         List<String> result = new ArrayList<String>();
         int length = pathList.size();
-        for (int i = beginIndex; i < beginIndex + footstep; i++){
-            if (length <= i)
-                break;
-            result.add(suffix + "data/" + pathList.get(i));
+        if (footstep > 0) {
+            for (int i = beginIndex; i < beginIndex + footstep; i++){
+                if (length <= i)
+                    break;
+                result.add(suffix + "data/" + pathList.get(i));
+            }
+        } else if (footstep < 0) {
+            for (int i = beginIndex - 1; i >= beginIndex + footstep; i++){
+                if (i < 0)
+                    break;
+                result.add(suffix + "data/" + pathList.get(i));
+            }
         }
 
         Gson gson = new Gson();
