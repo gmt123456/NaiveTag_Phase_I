@@ -45,6 +45,7 @@ public class ShowPicController {
         }
 
         Gson gson = new Gson();
+        System.out.println(gson.toJson(result));
         return gson.toJson(result);
     }
 

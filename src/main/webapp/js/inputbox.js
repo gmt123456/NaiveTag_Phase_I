@@ -18,7 +18,7 @@ function InputBox(description, idNum) {
     var label = document.createElement("label");
     label.setAttribute("for", "InputDescription_" + idNum);
     var text = document.createTextNode(this.description);
-    if(onlyOnce||stopCollapse){
+    if(onlyOnce||stopCollapse ){
         specialtitle = document.createTextNode("描述");
         label.appendChild(specialtitle);
     }else {
@@ -50,10 +50,3 @@ function popInputBox() {
     boxArray.pop();
 }
 
-function delInputBox() {
-    //删除全部输入框
-    cardbodyright.innerHTML="";
-    for(var i=0;i<=boxArray.length;i++){
-        boxArray.pop();
-    }
-}

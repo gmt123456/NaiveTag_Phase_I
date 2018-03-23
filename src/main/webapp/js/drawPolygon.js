@@ -103,10 +103,3 @@ var onlyOneLine = true;
         }
     })
 //})
-function delPolygon() {
-    //删除全部线条
-    for(var i=0;i<=array.length;i++){
-        array.pop();
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}

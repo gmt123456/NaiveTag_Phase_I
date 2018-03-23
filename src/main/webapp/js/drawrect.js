@@ -171,11 +171,3 @@ var disableRect = true;
 
     })
 //})
-
-function delRect() {
-    //删除全部矩形
-    for(var i=0;i<=arrayRect.length;i++){
-        arrayRect.pop();
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}

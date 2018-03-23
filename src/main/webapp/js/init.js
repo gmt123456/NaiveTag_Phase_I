@@ -3,9 +3,9 @@
  * @Description: 标记界面[filename]红色错误是编辑器的问题
  * @Date: Created in 2018/3/18
  */
-var fileIndex = 0;
+var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
-var fileNum = 2;//总共多少file
+var fileNum = 29999999;//总共多少file
 
 var taskType = 100;
 
@@ -15,15 +15,24 @@ window.onload = function () {
     //例：
     localStorage.clear();
 
-    taskType = 301;
+    taskType = 401;
     var classes = ["name1", "name2", "name3", "name4"];
     var description = "这是任务描述";
 
+    fileIndex = parseInt(window.location.search.replace("?",""));
+    //alert(window.location.search.replace("?",""));
+    //alert(typeof(fileIndex));
+    //alert(fileIndex);
     fetchImg(fileIndex,1,function (xmlHttp) {
         var list=xmlHttp.responseText;
         console.log(list);
-        filePath = list[0];
+        filePath = JSON.parse(list)[0];
     })
+    alert("睡觉之前");
+    function sleep(d) {
+        for (var t = Date.now(); Date.now() - t <= d;);
+    }
+    sleep(5000);
     startTask(taskType, classes, description);
 
     /*
@@ -33,7 +42,6 @@ window.onload = function () {
     });
 */
 }
-
 
 function save100(filename, labelname, index) {
     var value = {[filename]: {"label": labelname}};
@@ -117,7 +125,6 @@ function return300(content) {
                 boxArray[i].input.value = labelname;
             }
             var rect = new Rect(pos[0], pos[2], pos[1], pos[3]);
-            alert(arrayRect.length);
             arrayRect.push(rect);
             drawRect();
         }
@@ -182,9 +189,8 @@ function return401(content) {
         }
         array.push(polygon);
         drawPolygon();
-        pushCollapse();
-        var label = new Label(labelname,"noTagHead0-Label0_card-right-0");
-        arrayright[0].addLabel(label.label);
+        addInputBox();
+        boxArray[0].input.value = labelname;
     }
 }
 
@@ -234,10 +240,7 @@ function returnData(Index) {
 function startTask(taskID, arrayTag, description) {
     setTask(taskID);//选择任务类型
     setDescription(description);
-    if(taskID==401){
-        newCollapseLeft("标签", arrayTag);
-    }else if(taskID==400){
-
+    if(taskID==401 || taskID==400){
     }else if(taskID % 2 ==0){
         newCollapseLeft("标签", arrayTag);
     }
@@ -326,15 +329,19 @@ function setTask301() {
     document.getElementById("choosetag").style.display="none";
 }
 
-function setTask401() {
-    //对图片进行边界标
+function setTask400() {
+    //对图片进行边界
+    stopCollapse = true;
     hideButtonRect();
     document.getElementById("polygon").click();
+    document.getElementById("yourtag").style.display="none";
+    document.getElementById("choosetag").style.display="none";
 }
 
-function setTask400() {
+function setTask401() {
     //对图片进行边界注
-    stopCollapse = true;
+    useInputBox = true;
+    onlyOnce = true;
     hideButtonRect();
     document.getElementById("polygon").click();
     document.getElementById("yourtag").style.display="none";
@@ -360,25 +367,37 @@ function setPicture(url) {
 }
 
 $("#last").click(function () {
-    if(fileIndex > 0){
-        document.getElementById("save").click();
-        fileIndex = fileIndex - 1;
-        filePath = "image/greenandblue.jpg";
-        setPicture(filePath);
-        delAll();
-        returnData(fileIndex);
+    if(checkAll()){
+        if(fileIndex > 0){
+            document.getElementById("save").click();
+            fileIndex = fileIndex - 1;
+            fetchImg(fileIndex,1,function (xmlHttp) {
+                var list=xmlHttp.responseText;
+                console.log(list);
+                filePath = JSON.parse(list)[0];
+            });
+            setPicture(filePath);
+            delAll();
+            returnData(fileIndex);
 
+        }
     }
 })
 
 $("#next").click(function () {
-    if(fileIndex < fileNum - 1){
-        document.getElementById("save").click();
-        fileIndex = fileIndex + 1;
-        filePath = "image/img_the_scream.jpg";
-        setPicture(filePath);
-        delAll();
-        returnData(fileIndex);
+    if(checkAll()){
+        if(fileIndex < fileNum - 1){
+            document.getElementById("save").click();
+            fileIndex = fileIndex + 1;
+            fetchImg(fileIndex,1,function (xmlHttp) {
+                var list=xmlHttp.responseText;
+                console.log(list);
+                filePath = JSON.parse(list)[0];
+            });
+            setPicture(filePath);
+            delAll();
+            returnData(fileIndex);
+        }
     }
 })
 
@@ -386,7 +405,40 @@ function delAll() {
     delCollapse();
     delInputBox();
     delPolygon();
-    delRect();
+    delAllRect();
+}
+
+function checkAll() {
+    var success = true;
+    switch (taskType){
+        case 100:
+            success = checkCollapse();
+            break;
+        case 101:
+            success = checkInputBox();
+            break;
+        case 200:
+            success = checkCollapse() && checkRect();
+            break;
+        case 201:
+            success = checkInputBox() && checkRect();
+            break;
+        case 300:
+            success = checkCollapse() && checkRect();
+            break;
+        case 301:
+            success = checkInputBox() && checkRect();
+            break;
+        case 400:
+            success = checkPolygon();
+            break;
+        case 401:
+            success = checkInputBox() && checkPolygon();
+            break;
+        default:
+            break;
+    }
+    return success;
 }
 
 function checkCollapse() {
@@ -431,76 +483,93 @@ function checkPolygon() {
 $("#save").click(function () {
     switch (taskType){
         case 100:
-            if(checkCollapse()){
-                save100(filePath,arrayright[0].labelArray[0].name,fileIndex);
-            }
+            save100(filePath,arrayright[0].labelArray[0].name,fileIndex);
             break;
         case 101:
-            if(checkInputBox()){
-                if(boxArray[0].input.value==""){
-                    boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-                }else{
-                    boxArray[0].input.setAttribute("style","");
-                    save100(filePath,boxArray[0].input.value,fileIndex);
-                }
+            if(boxArray[0].input.value==""){
+                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+            }else{
+                boxArray[0].input.setAttribute("style","");
+                save100(filePath,boxArray[0].input.value,fileIndex);
             }
             break;
         case 200:
-            if(checkCollapse() && checkRect()){
-                save200(filePath,arrayright[0].labelArray[0].name,fileIndex,arrayRect[0]);
-            }
+            save200(filePath,arrayright[0].labelArray[0].name,fileIndex,arrayRect[0]);
             break;
         case 201:
-            if(checkInputBox() && checkRect()){
-                if(boxArray[0].input.value==""){
-                    boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-                }else{
-                    boxArray[0].input.setAttribute("style","");
-                    save200(filePath,boxArray[0].input.value,fileIndex,arrayRect[0]);
-                }
+            if(boxArray[0].input.value==""){
+                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+            }else{
+                boxArray[0].input.setAttribute("style","");
+                save200(filePath,boxArray[0].input.value,fileIndex,arrayRect[0]);
             }
             break;
         case 300:
-            if(checkCollapse() && checkRect()){
-                var labelnamelist = new Array();
-                for(var i=0;i<arrayright.length;i++){
-                    labelnamelist.push(arrayright[i].labelArray[0].name);
-                }
-                save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
+            var labelnamelist = new Array();
+            for(var i=0;i<arrayright.length;i++){
+                labelnamelist.push(arrayright[i].labelArray[0].name);
             }
+            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             break;
         case 301:
-            if(checkInputBox() && checkRect()){
-                var labelnamelist = new Array();
-                for(var i=0;i<boxArray.length;i++){
-                    labelnamelist.push(boxArray[i].input.value);
-                }
-                save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
+            var labelnamelist = new Array();
+            for(var i=0;i<boxArray.length;i++){
+                labelnamelist.push(boxArray[i].input.value);
             }
+            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
             break;
         case 400:
-            if(checkPolygon()){
-                var pointlist = array[0].set;
-                var number = pointlist.length;
-                if(number%2!=0){
-                    pointlist.pop();
-                    number--;
-                }
-                save400(filePath,fileIndex,pointlist,number);
+            var pointlist = array[0].set;
+            var number = pointlist.length;
+            if(number%2!=0){
+                pointlist.pop();
+                number--;
             }
+            save400(filePath,fileIndex,pointlist,number);
             break;
         case 401:
-            if(checkPolygon()){
-                var pointlist = array[0].set;
-                var number = pointlist.length;
-                if(number%2!=0){
-                    pointlist.pop();
-                    number--;
-                }
-                save401(filePath,arrayright[0].labelArray[0].name,fileIndex,pointlist,number);
+            var pointlist = array[0].set;
+            var number = pointlist.length;
+            if(number%2!=0){
+                pointlist.pop();
+                number--;
             }
+            save401(filePath,boxArray[0].input.value,fileIndex,pointlist,number);
             break;
         default:
             break;
     }
 })
+
+
+function delAllRect() {
+    //删除全部矩形
+    for(;arrayRect.length > 0;){
+        arrayRect.pop();
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function delCollapse() {
+    //删除全部手风琴
+    cardbodyright.innerHTML="";
+    for(;arrayright.length > 0;){
+        arrayright.pop();
+    }
+}
+
+function delPolygon() {
+    //删除全部线条
+    for(;array.length>0;){
+        array.pop();
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function delInputBox() {
+    //删除全部输入框
+    cardbodyright.innerHTML="";
+    for(;boxArray.length > 0;){
+        boxArray.pop();
+    }
+}
