@@ -14,6 +14,7 @@ var labelnum = 1;//接受的标签数量
 var labelType = "noTagHead";//or "TagHead"
 
 
+
 function onclicklabelleft(id) {
 	var label = document.getElementById(id).cloneNode(true)
 	var TagHeadIndex = id.split("-")[3];
@@ -39,6 +40,8 @@ function onclicklabelright(id) {
         labelIndex = parseInt(id.split("_")[0].split("-")[0].replace("noTagHead",""));
         labelarray = arrayright[targetIndex].labelArray;
         labelarray.splice(labelIndex, 1);
+
+        var key = "card_" + targetIndex + "-label_" + labelIndex;
 	}
 
 	var ID = "#" + id;
@@ -53,7 +56,8 @@ function onclickcollapse(id){
 	var target = document.getElementById(id+"");
     target.setAttribute("style","box-shadow:0 0 8px rgba(2, 117,216,0.8);");
     targetIndex = id.split("-")[2];
-    if (disableRect) {
+
+    if (disableRect && arrayRect.length > 0) {
         findRect(arrayRect[targetIndex].x, arrayRect[targetIndex].y, 5);
         drawRect();
     }
@@ -139,13 +143,19 @@ function Collapse(id, cardbodyID, name){
 
     var title;
     if(right){
-    	var num = parseInt(id.split("-")[2]) + 1;
+        var num = parseInt(id.split("-")[2]) + 1;
         title = document.createTextNode("#" + num + " " +name);
+
 	}
 	else{
     	title = document.createTextNode(name);
 	}
-    links.appendChild(title);
+    if(onlyOnce||stopCollapse){
+        specialtitle = document.createTextNode("标记");
+        links.appendChild(specialtitle);
+    }else {
+        links.appendChild(title);
+    }
 	
 	var block = document.createElement("div");
 	block.setAttribute("class","card-block");
@@ -194,6 +204,10 @@ function Collapse(id, cardbodyID, name){
                 label.label.setAttribute("onclick","onclicklabelright(id)");
                 block.appendChild(label.label);
                 this.labelArray.push(label);
+
+                var cardIndex = this.id.split("-")[2];
+                var key = "card_" + cardIndex + "-" + "label_" + (this.labelArray.length-1);
+
             }
 
 		}
@@ -268,4 +282,12 @@ function popCollapse(){
         arrayright.pop();
 
 	}
+}
+
+function delCollapse() {
+    //删除全部手风琴
+    cardbodyright.innerHTML="";
+    for(var i=0;i<arrayright.length;i++){
+        arrayright.pop();
+    }
 }

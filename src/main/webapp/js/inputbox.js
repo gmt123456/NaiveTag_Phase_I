@@ -7,7 +7,9 @@
 var boxArray = new Array();
 
 function InputBox(description, idNum) {
+
     this.description = "#" + (idNum + 1) + " " + description;
+
     this.inputbox = document.createElement("form");
     this.inputbox.setAttribute("role", "form");
     this.inputbox.setAttribute("id", "inputBox_" + idNum);
@@ -16,14 +18,21 @@ function InputBox(description, idNum) {
     var label = document.createElement("label");
     label.setAttribute("for", "InputDescription_" + idNum);
     var text = document.createTextNode(this.description);
-    label.appendChild(text);
-    var input = document.createElement("input");
-    input.setAttribute("class", "form-control");
-    input.setAttribute("id", label.getAttribute("for"));
+    if(onlyOnce||stopCollapse){
+        specialtitle = document.createTextNode("描述");
+        label.appendChild(specialtitle);
+    }else {
+        label.appendChild(text);
+    }
+
+    this.input = document.createElement("input");
+    this.input.setAttribute("class", "form-control");
+    this.input.setAttribute("id", label.getAttribute("for"));
 
     this.inputbox.appendChild(div);
     div.appendChild(label);
-    div.appendChild(input);
+    div.appendChild(this.input);
+
 }
 
 function addInputBox() {
@@ -39,4 +48,12 @@ function popInputBox() {
     var delID = "#" + "inputBox_" + (boxArray.length - 1);
     $(delID).remove();
     boxArray.pop();
+}
+
+function delInputBox() {
+    //删除全部输入框
+    cardbodyright.innerHTML="";
+    for(var i=0;i<boxArray.length;i++){
+        boxArray.pop();
+    }
 }
