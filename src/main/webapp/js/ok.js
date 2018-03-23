@@ -29,7 +29,6 @@ $(function () {
             responseResult = JSON.parse(xmlHttp.responseText);
             console.log(responseResult);
             addImg();
-            beginIndex = beginIndex + footstep;
         })
     })
 
@@ -46,8 +45,9 @@ $(function () {
         console.log("add");
         for (var i = 0; i < responseResult.length; i++) {
             var src = responseResult[i];
-            item = '<div class="img-box "><a href="index.htm"><img class="img-fluid" src="' + src + '"></a></div>';
+            item = '<div class="img-box "><a href="index.htm?'+beginIndex+'"><img class="img-fluid" src="' + src + '"></a></div>';
             $("#img-container").append(item);
+            beginIndex++;
         }
     }
 
