@@ -40,8 +40,22 @@ public class UploadDataSetController {
         return "upload";
     }
 
-    @RequestMapping(value = "/save.do", method = {RequestMethod.POST})
-    public void saveData(HttpServletRequest request, @RequestParam String results) {
+    class ConfigForm {
+        private String results;
+
+        public String getResults() {
+            return results;
+        }
+
+        public void setResults(String results) {
+            this.results = results;
+        }
+    }
+
+    @RequestMapping(value = "/save.html", method = {RequestMethod.POST})
+    public void saveData(HttpServletRequest request, @RequestBody ConfigForm form) {
+        String results = form.getResults();
+        System.out.println(results);
         HttpSession session = request.getSession();
         if (session == null)
             return;

@@ -18,26 +18,26 @@ window.onload = function () {
     var classes = ["name1", "name2", "name3", "name4"];
     var description = "这是任务描述";
 
-    fileIndex = parseInt(window.location.search.replace("?",""));
+    fileIndex = parseInt(window.location.search.replace("?", ""));
     //alert(window.location.search.replace("?",""));
     //alert(typeof(fileIndex));
     //alert(fileIndex);
-    fetchImg(fileIndex,1,function (xmlHttp) {
-        var list=xmlHttp.responseText;
+    fetchImg(fileIndex, 1, function (xmlHttp) {
+        var list = xmlHttp.responseText;
         console.log(list);
         filePath = JSON.parse(list)[0];
         startTask(taskType, classes, description);
     })
     /*
-    function sleep(d) {
-        for (var t = Date.now(); Date.now() - t <= d;);
-    }
+     function sleep(d) {
+     for (var t = Date.now(); Date.now() - t <= d;);
+     }
 
-    $.getJSON("test.json",function(json){
-        taskType = 401;
+     $.getJSON("test.json",function(json){
+     taskType = 401;
 
-    });
-*/
+     });
+     */
 }
 
 function sleep(d) {
@@ -46,24 +46,24 @@ function sleep(d) {
 
 function save100(filename, labelname, index) {
     var value = {[filename]: {"label": labelname}};
-    localStorage.setItem(index ,JSON.stringify(value));
+    localStorage.setItem(index, JSON.stringify(value));
 }
 
 function return100(content) {
-    if(content == null){
-        if(taskType == 100){
+    if (content == null) {
+        if (taskType == 100) {
             pushCollapse();
         }
-        else{
+        else {
             addInputBox();
         }
-    }else{
+    } else {
         var labelname = content["label"];
-        if(taskType == 100){
+        if (taskType == 100) {
             pushCollapse();
-            var label = new Label(labelname,"noTagHead0-Label0_card-right-0");
+            var label = new Label(labelname, "noTagHead0-Label0_card-right-0");
             arrayright[0].addLabel(label.label);
-        }else{
+        } else {
             addInputBox();
             boxArray[0].input.value = labelname;
         }
@@ -71,24 +71,24 @@ function return100(content) {
 }
 
 function save200(filename, labelname, index, Rect) {
-    var pos =  [Rect.x, (Rect.x+Rect.width), Rect.y, (Rect.y+Rect.height)];
+    var pos = [Rect.x, (Rect.x + Rect.width), Rect.y, (Rect.y + Rect.height)];
     var value = {[filename]: {"label": labelname, "pos": pos}};
     localStorage.setItem(index, JSON.stringify(value));
 }
 
 function return200(content) {
-    if(content == null){
-        if(taskType == 201){
+    if (content == null) {
+        if (taskType == 201) {
             addInputBox();
         }
-    }else{
+    } else {
         var labelname = content["label"];
         var pos = content["pos"];
-        if(taskType == 200){
+        if (taskType == 200) {
             pushCollapse();
-            var label = new Label(labelname,"noTagHead0-Label0_card-right-0");
+            var label = new Label(labelname, "noTagHead0-Label0_card-right-0");
             arrayright[0].addLabel(label.label);
-        }else{
+        } else {
             addInputBox();
             boxArray[0].input.value = labelname;
         }
@@ -100,9 +100,9 @@ function return200(content) {
 
 function save300(filename, labelnameList, index, rectList, number) {
     var content = new Array();
-    for(var i=0;i<number;i++){
+    for (var i = 0; i < number; i++) {
         var Rect = rectList[i];
-        var pos =  [Rect.x, (Rect.x+Rect.width), Rect.y, (Rect.y+Rect.height)];
+        var pos = [Rect.x, (Rect.x + Rect.width), Rect.y, (Rect.y + Rect.height)];
         var item = {"label": labelnameList[i], "pos": pos};
         content.push(item);
     }
@@ -111,17 +111,17 @@ function save300(filename, labelnameList, index, rectList, number) {
 }
 
 function return300(content) {
-    if(content == null){
-    }else{
-        for(var i=0;i<content.length;i++){
+    if (content == null) {
+    } else {
+        for (var i = 0; i < content.length; i++) {
             var item = content[i];
             var labelname = item["label"];
             var pos = item["pos"];
-            if(taskType == 300){
+            if (taskType == 300) {
                 pushCollapse();
-                var label = new Label(labelname,"noTagHead0-Label0_card-right-"+i);
+                var label = new Label(labelname, "noTagHead0-Label0_card-right-" + i);
                 arrayright[i].addLabel(label.label);
-            }else{
+            } else {
                 addInputBox();
                 boxArray[i].input.value = labelname;
             }
@@ -135,10 +135,10 @@ function return300(content) {
 
 function save400(filename, index, pointList, number) {
     var content = new Array();
-    for(var i=0;i<number;i=i+2){
+    for (var i = 0; i < number; i = i + 2) {
         var p1 = pointList[i];
-        var p2 = pointList[i+1];
-        var pos =  [p1.x, p1.y, p2.x, p2.y];
+        var p2 = pointList[i + 1];
+        var pos = [p1.x, p1.y, p2.x, p2.y];
         content.push(pos);
     }
     var value = {[filename]: {"pos": content}};
@@ -147,14 +147,14 @@ function save400(filename, index, pointList, number) {
 
 
 function return400(content) {
-    if(content == null){
-    }else{
+    if (content == null) {
+    } else {
         var pos = content["pos"];
         var polygon = new Polygon();
-        for(var i in pos){
+        for (var i in pos) {
             var item = pos[i];
-            var point1 = new Point(item[0],item[1]);
-            var point2 = new Point(item[2],item[3]);
+            var point1 = new Point(item[0], item[1]);
+            var point2 = new Point(item[2], item[3]);
             polygon.set.push(point1);
             polygon.set.push(point2);
         }
@@ -165,10 +165,10 @@ function return400(content) {
 
 function save401(filename, labelname, index, pointList, number) {
     var content = new Array();
-    for(var i=0;i<number;i=i+2){
+    for (var i = 0; i < number; i = i + 2) {
         var p1 = pointList[i];
-        var p2 = pointList[i+1];
-        var pos =  [p1.x, p1.y, p2.x, p2.y];
+        var p2 = pointList[i + 1];
+        var pos = [p1.x, p1.y, p2.x, p2.y];
         content.push(pos);
     }
     var value = {[filename]: {"label": labelname, "pos": content}};
@@ -176,15 +176,15 @@ function save401(filename, labelname, index, pointList, number) {
 }
 
 function return401(content) {
-    if(content == null){
-    }else{
+    if (content == null) {
+    } else {
         var labelname = content["label"];
         var pos = content["pos"];
         var polygon = new Polygon();
-        for(var i in pos){
+        for (var i in pos) {
             var item = pos[i];
-            var point1 = new Point(item[0],item[1]);
-            var point2 = new Point(item[2],item[3]);
+            var point1 = new Point(item[0], item[1]);
+            var point2 = new Point(item[2], item[3]);
             polygon.set.push(point1);
             polygon.set.push(point2);
         }
@@ -197,17 +197,17 @@ function return401(content) {
 
 function returnData(Index) {
     var nothing = false;
-    if (localStorage.getItem(Index) === null){
+    if (localStorage.getItem(Index) === null) {
         nothing = true;
     }
     var content = null;
-    if(!nothing){
+    if (!nothing) {
         var json = JSON.parse(localStorage.getItem(Index));
         content = json[filePath];
     }
     //alert(JSON.stringify(content));
     //alert(localStorage.getItem(Index+""));
-    switch (taskType){
+    switch (taskType) {
         case 100:
             return100(content);
             break;
@@ -241,8 +241,8 @@ function returnData(Index) {
 function startTask(taskID, arrayTag, description) {
     setTask(taskID);//选择任务类型
     setDescription(description);
-    if(taskID==401 || taskID==400){
-    }else if(taskID % 2 ==0){
+    if (taskID == 401 || taskID == 400) {
+    } else if (taskID % 2 == 0) {
         newCollapseLeft("标签", arrayTag);
     }
     setPicture(filePath);
@@ -294,7 +294,7 @@ function setTask101() {
     hideButtonRect();
     addInputBox();
     hideButtonLine();
-    document.getElementById("choosetag").style.display="none";
+    document.getElementById("choosetag").style.display = "none";
 }
 
 function setTask200() {
@@ -311,7 +311,7 @@ function setTask201() {
     addInputBox();
     hideButtonLine();
     document.getElementById("toggle").click();
-    document.getElementById("choosetag").style.display="none";
+    document.getElementById("choosetag").style.display = "none";
 }
 
 function setTask300() {
@@ -327,7 +327,7 @@ function setTask301() {
     useInputBox = true;
     hideButtonLine();
     document.getElementById("toggle").click();
-    document.getElementById("choosetag").style.display="none";
+    document.getElementById("choosetag").style.display = "none";
 }
 
 function setTask400() {
@@ -335,8 +335,8 @@ function setTask400() {
     stopCollapse = true;
     hideButtonRect();
     document.getElementById("polygon").click();
-    document.getElementById("yourtag").style.display="none";
-    document.getElementById("choosetag").style.display="none";
+    document.getElementById("yourtag").style.display = "none";
+    document.getElementById("choosetag").style.display = "none";
 }
 
 function setTask401() {
@@ -345,18 +345,18 @@ function setTask401() {
     onlyOnce = true;
     hideButtonRect();
     document.getElementById("polygon").click();
-    document.getElementById("yourtag").style.display="none";
-    document.getElementById("choosetag").style.display="none";
+    document.getElementById("yourtag").style.display = "none";
+    document.getElementById("choosetag").style.display = "none";
 }
 
 function hideButtonRect() {
-    document.getElementById("toggle").style.display="none";
-    document.getElementById("backR").style.display="none";
+    document.getElementById("toggle").style.display = "none";
+    document.getElementById("backR").style.display = "none";
 }
 
 function hideButtonLine() {
-    document.getElementById("polygon").style.display="none";
-    document.getElementById("backP").style.display="none";
+    document.getElementById("polygon").style.display = "none";
+    document.getElementById("backP").style.display = "none";
 }
 
 function setDescription(text) {
@@ -368,13 +368,13 @@ function setPicture(url) {
 }
 
 $("#last").click(function () {
-    if(checkAll()){
-        if(fileIndex > 0){
+    if (checkAll()) {
+        if (fileIndex > 0) {
             saveWeb();
             //alert("beforefet:fileIndex:"+fileIndex);
             fileIndex = fileIndex - 1;
-            fetchImg(fileIndex,1,function (xmlHttp) {
-                var list=xmlHttp.responseText;
+            fetchImg(fileIndex, 1, function (xmlHttp) {
+                var list = xmlHttp.responseText;
                 console.log(list);
                 filePath = JSON.parse(list)[0];
                 changePicData(fileIndex);
@@ -393,12 +393,12 @@ function changePicData(fileIndex) {
 }
 
 $("#next").click(function () {
-    if(checkAll()){
+    if (checkAll()) {
         saveWeb();
         //alert("beforefet:fileIndex:"+fileIndex);
         fileIndex = fileIndex + 1;
-        fetchImg(fileIndex,1,function (xmlHttp) {
-            var list=xmlHttp.responseText;
+        fetchImg(fileIndex, 1, function (xmlHttp) {
+            var list = xmlHttp.responseText;
             console.log(list);
             filePath = JSON.parse(list)[0];
             changePicData(fileIndex);
@@ -417,7 +417,7 @@ function delAll() {
 
 function checkAll() {
     var success = true;
-    switch (taskType){
+    switch (taskType) {
         case 100:
             success = checkCollapse();
             break;
@@ -449,40 +449,40 @@ function checkAll() {
 }
 
 function checkCollapse() {
-    for(var i in arrayright){
+    for (var i in arrayright) {
         var collapse = arrayright[i];
         var labelArray = collapse.labelArray;
-        if(labelArray.length === 0){
+        if (labelArray.length === 0) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 }
 
 function checkInputBox() {
-    for(var i in boxArray){
+    for (var i in boxArray) {
         var inputbox = boxArray[i];
-        if (inputbox.input.value === null || inputbox.input.value === ""){
+        if (inputbox.input.value === null || inputbox.input.value === "") {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 }
 
-function checkRect(){
-    if(arrayRect.length===0){
+function checkRect() {
+    if (arrayRect.length === 0) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
 function checkPolygon() {
-    if(array.length === 0){
+    if (array.length === 0) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
@@ -551,7 +551,7 @@ function saveWeb() {
 
 function delAllRect() {
     //删除全部矩形
-    for(;arrayRect.length > 0;){
+    for (; arrayRect.length > 0;) {
         arrayRect.pop();
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -559,15 +559,15 @@ function delAllRect() {
 
 function delCollapse() {
     //删除全部手风琴
-    cardbodyright.innerHTML="";
-    for(;arrayright.length > 0;){
+    cardbodyright.innerHTML = "";
+    for (; arrayright.length > 0;) {
         arrayright.pop();
     }
 }
 
 function delPolygon() {
     //删除全部线条
-    for(;array.length>0;){
+    for (; array.length > 0;) {
         array.pop();
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -575,8 +575,8 @@ function delPolygon() {
 
 function delInputBox() {
     //删除全部输入框
-    cardbodyright.innerHTML="";
-    for(;boxArray.length > 0;){
+    cardbodyright.innerHTML = "";
+    for (; boxArray.length > 0;) {
         boxArray.pop();
     }
 }
@@ -585,15 +585,23 @@ function delInputBox() {
 var arrayJson;
 
 $("#save").click(function () {
-    if(checkAll()){
+    if (checkAll()) {
         saveWeb();
         arrayJson = new Array();
-        for(var index = fileIndex;localStorage.getItem(index) != null;index++){
+        for (var index = fileIndex; localStorage.getItem(index) != null; index++) {
             arrayJson.push(JSON.parse(localStorage.getItem(index)));
         }
-        for(var index = fileIndex - 1;localStorage.getItem(index) != null;index--){
+        for (var index = fileIndex - 1; localStorage.getItem(index) != null; index--) {
             arrayJson.push(JSON.parse(localStorage.getItem(index)));
         }
-        alert(arrayJson.toString());
+        var result = JSON.stringify(arrayJson)
+
+        $.ajax({
+            type: "POST",
+            url: "save.html",
+            data:'results:'+result,
+            dataType:"json",
+            contentType:'application/json'
+        });
     }
 })
