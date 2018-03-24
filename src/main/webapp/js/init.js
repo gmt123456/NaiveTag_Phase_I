@@ -13,7 +13,7 @@ var taskType = 100;
 window.onload = function () {
     //需要初始化的有：fileIndex(1)、filePath、jsonString、和jsontask数据：taskType、classes、description
 
-    localStorage.clear();
+    //localStorage.clear();
 
     //例：
     /*
@@ -96,8 +96,9 @@ function return100(content) {
         var labelname = content["label"];
         if (taskType == 100) {
             pushCollapse();
-            var label = new Label(labelname, "noTagHead0-Label0_card-right-0");
+            var label = new Label(labelname, "noTagHead0-Label0_block-card-right-0");
             arrayright[0].addLabel(label.label);
+            //alert(arrayright[0].labelArray[0].label.getAttribute("onclick"));
         } else {
             addInputBox();
             boxArray[0].input.value = labelname;
@@ -119,9 +120,9 @@ function return200(content) {
     } else {
         var labelname = content["label"];
         var pos = content["pos"];
-        if (taskType == 200) {
+        if (taskType === 200) {
             pushCollapse();
-            var label = new Label(labelname, "noTagHead0-Label0_card-right-0");
+            var label = new Label(labelname, "noTagHead0-Label0_block-card-right-0");
             arrayright[0].addLabel(label.label);
         } else {
             addInputBox();
@@ -154,7 +155,7 @@ function return300(content) {
             var pos = item["pos"];
             if (taskType == 300) {
                 pushCollapse();
-                var label = new Label(labelname, "noTagHead0-Label0_card-right-" + i);
+                var label = new Label(labelname, "noTagHead0-Label0_block-card-right-" + i);
                 arrayright[i].addLabel(label.label);
             } else {
                 addInputBox();
@@ -644,6 +645,7 @@ $("#save").click(function () {
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";
+        alert(arrayString);
         $('#fakeSaveResult').val(arrayString);
         console.log("arrayString "+arrayString)
         console.log( $('#fakeSaveResult').val());
