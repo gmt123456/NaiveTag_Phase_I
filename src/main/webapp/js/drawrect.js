@@ -158,7 +158,7 @@ var disableRect = true;
      */
     function drawText(text, x, y) {
         ctx.font = "20px Arial";
-        ctx.fillStyle = "#0275d8";
+        ctx.fillStyle = "#ff0000";
         ctx.fillText(text+"", x, y);
     }
 
