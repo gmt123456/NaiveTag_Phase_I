@@ -59,58 +59,62 @@ public class UploadDataSetController {
 
     @RequestMapping(value = "/uploadCheck.html")
     public ModelAndView uploadDataSet(HttpServletRequest request,
-                                      @RequestParam MultipartFile dataSet){
-        boolean emptyFile = dataSet.isEmpty();
-        if (emptyFile)
-            return new ModelAndView("upload", "error", "文件不能为空");
+                                      @RequestParam(required = false) MultipartFile dataSet){
+        if (dataSet == null)
+            return new ModelAndView("oj");
+        else {
+            boolean emptyFile = dataSet.isEmpty();
+            if (emptyFile)
+                return new ModelAndView("upload", "error", "文件不能为空");
 
-        if (!uploadDataSetService.validDataSet(dataSet.getOriginalFilename()))
-            return new ModelAndView("upload", "error", "不支持的文件格式");
+            if (!uploadDataSetService.validDataSet(dataSet.getOriginalFilename()))
+                return new ModelAndView("upload", "error", "不支持的文件格式");
 
-        String path = request.getSession().getServletContext().getRealPath(Config.RAW_FILE_PATH) + File.separator;
+            String path = request.getSession().getServletContext().getRealPath(Config.RAW_FILE_PATH) + File.separator;
 
-        String fileName = dataSet.getOriginalFilename();
-        File filePath = new File(path + fileName);
+            String fileName = dataSet.getOriginalFilename();
+            File filePath = new File(path + fileName);
 
-        if (!filePath.getParentFile().exists()) filePath.getParentFile().mkdirs();
+            if (!filePath.getParentFile().exists()) filePath.getParentFile().mkdirs();
 
-        try {
-            dataSet.transferTo(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ModelAndView("upload", "error", "文件已经存在");
-        }
-
-        try {
-            uploadDataSetService.unZipRawImages(filePath.getAbsolutePath());
-        } catch (WrongDataSetFormatException e) {
-            return new ModelAndView("upload", "error", "文件格式不正确");
-        } catch (FailToUnzipException e) {
-            return new ModelAndView("upload", "error", "文件解压缩失败");
-        } catch (WrongTaskFileException e) {
-            return new ModelAndView("upload", "error", "不正确的task描述");
-        }
-
-        HttpSession session = request.getSession(true);
-        String relatedPath = Config.UNZIPPED_FILE_PATH + "/"
-                + fileName.substring(0, fileName.lastIndexOf('.')) + "/";
-        session.setAttribute("path", relatedPath);
-
-        String parentPath = filePath.getParentFile().getParent();
-
-        fileName = fileName.substring(0, fileName.lastIndexOf("."));
-        String target = parentPath + File.separator +
-                Config.UNZIPPED_FILE_PATH + File.separator + fileName + File.separator + "data";
-
-        List<String> imageNames = Arrays.asList(new File(target).list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.contains(".");
+            try {
+                dataSet.transferTo(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new ModelAndView("upload", "error", "文件已经存在");
             }
-        }));
 
-        session.setAttribute("picList", imageNames);
-        return new ModelAndView("oj");
+            try {
+                uploadDataSetService.unZipRawImages(filePath.getAbsolutePath());
+            } catch (WrongDataSetFormatException e) {
+                return new ModelAndView("upload", "error", "文件格式不正确");
+            } catch (FailToUnzipException e) {
+                return new ModelAndView("upload", "error", "文件解压缩失败");
+            } catch (WrongTaskFileException e) {
+                return new ModelAndView("upload", "error", "不正确的task描述");
+            }
+
+            HttpSession session = request.getSession(true);
+            String relatedPath = Config.UNZIPPED_FILE_PATH + "/"
+                    + fileName.substring(0, fileName.lastIndexOf('.')) + "/";
+            session.setAttribute("path", relatedPath);
+
+            String parentPath = filePath.getParentFile().getParent();
+
+            fileName = fileName.substring(0, fileName.lastIndexOf("."));
+            String target = parentPath + File.separator +
+                    Config.UNZIPPED_FILE_PATH + File.separator + fileName + File.separator + "data";
+
+            List<String> imageNames = Arrays.asList(new File(target).list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.contains(".");
+                }
+            }));
+
+            session.setAttribute("picList", imageNames);
+            return new ModelAndView("oj");
+        }
     }
 
 
