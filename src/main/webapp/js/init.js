@@ -644,5 +644,10 @@ $("#save").click(function () {
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";
+        $('#fakeSaveResult').val(arrayString);
+        console.log("arrayString "+arrayString)
+        console.log( $('#fakeSaveResult').val());
+        $('#saveForm').submit(alert('save'));
+
     }
 })
