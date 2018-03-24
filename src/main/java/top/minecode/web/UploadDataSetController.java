@@ -15,6 +15,7 @@ import top.minecode.service.UploadDataSetService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,7 @@ public class UploadDataSetController {
         return "upload";
     }
 
+
     @RequestMapping(value = "/uploadCheck.html")
     public ModelAndView uploadDataSet(HttpServletRequest request,
                                       @RequestParam MultipartFile dataSet){
@@ -61,7 +63,7 @@ public class UploadDataSetController {
             dataSet.transferTo(filePath);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ModelAndView("upload", "error", "文件解压失败");
+            return new ModelAndView("upload", "error", "文件已经存在");
         }
 
         try {
@@ -85,7 +87,12 @@ public class UploadDataSetController {
         String target = parentPath + File.separator +
                 Config.UNZIPPED_FILE_PATH + File.separator + fileName + File.separator + "data";
 
-        List<String> imageNames = Arrays.asList(new File(target).list());
+        List<String> imageNames = Arrays.asList(new File(target).list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.contains(".");
+            }
+        }));
 
         session.setAttribute("picList", imageNames);
         return new ModelAndView("oj");
