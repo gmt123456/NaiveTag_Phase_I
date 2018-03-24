@@ -23,18 +23,17 @@
 </head>
 <body>
 
-<div class=" row" id="container">
-    <div id="img-container" class="col-xl-1">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+    <ul class="navbar-nav" >
+        <li class="nav-item">
+            <a class="nav-link" id="loadHistoryPic" data-toggle="modal" data-target="#chooseFileModal" >查看历史标注</a>
+        </li>
+    </ul>
+</nav>
+
+<div id="container">
+    <div id="img-container" class="top-margin img-container">
     </div>
-
-    <button id="loadPic" class="btn btn-primary">
-        more
-    </button>
-
-    <button type="button" id="loadHistoryPic" data-toggle="modal" data-target="#chooseFileModal">
-        查看历史图片
-    </button>
-
 
     <div class="modal fade" id="chooseFileModal">
         <div class="modal-dialog">
