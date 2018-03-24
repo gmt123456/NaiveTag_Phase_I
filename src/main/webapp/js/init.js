@@ -7,7 +7,7 @@ var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
 var jsonString = undefined;//需要加载的json文件字符串格式
 
-var taskType = 100;
+var taskType = 300;
 
 
 var arrayKeyN;
@@ -40,7 +40,7 @@ window.onload = function () {
         //alert("undfin"+jsonString);
         fileIndex = parseInt(window.location.search.replace("?", ""));
 
-        fetchImg(0, 1, function (xmlHttp) {
+        fetchImg(fileIndex, 1, function (xmlHttp) {
             var list = xmlHttp.responseText;
             console.log(list);
             filePath = JSON.parse(list)[0];
@@ -49,6 +49,7 @@ window.onload = function () {
             console.log(jsonString);
         })
     }else{
+        alert("history!");
         fileIndex = 0;
         for(var i in JSON.parse(jsonString)){
             arrayKey.push(i);
@@ -72,6 +73,7 @@ window.onload = function () {
      taskType = 401;
 
     */
+    alert("taskType"+taskType);
 
 }
 
@@ -463,25 +465,24 @@ function changePicData(fileIndex) {
 
 $("#next").click(function () {
     if (checkAll()) {
-        if (fileIndex < arrayKeyN) {
+        if(jsonString === "undefined"){
             saveWeb();
-            //alert("beforefet:fileIndex:"+fileIndex);
             fileIndex = fileIndex + 1;
-            if(jsonString === "undefined"){
-                fetchImg(fileIndex, 1, function (xmlHttp) {
-                    var list = xmlHttp.responseText;
-                    console.log(list);
-                    filePath = JSON.parse(list)[0];
-                    changePicData(fileIndex);
-                });
-            }else{
+            fetchImg(fileIndex, 1, function (xmlHttp) {
+                var list = xmlHttp.responseText;
+                console.log(list);
+                filePath = JSON.parse(list)[0];
+                changePicData(fileIndex);
+            });
+        }else{
+            if (fileIndex < arrayKeyN) {
+                saveWeb();
+                fileIndex = fileIndex + 1;
                 filePath = getfilePath();
                 changePicData(fileIndex);
             }
-
-            //alert("afterfet:fileIndex:"+fileIndex);
-            //sleep(5000);
         }
+
     }
 })
 
@@ -672,18 +673,22 @@ function loadJsonData() {
 
 var arrayString;
 
+var startI;
+var endI;
 $("#save").click(function () {
     if (checkAll()) {
         saveWeb();
         var arrayJson = new Array();
-        for(var index = fileIndex;sessionStorage.getItem(index) != null;index++){
+        for(endI =  fileIndex;sessionStorage.getItem(index) != null;endI++){
+        }
+        for(startI = fileIndex;sessionStorage.getItem(index) != null;startI--){
+            console.log(startI);
+        }
+        for(var index = startI;index<=endI;index++){
             var s = sessionStorage.getItem(index);
             arrayJson.push(s.substr(1,s.length-2));
         }
-        for(var index = fileIndex - 1;sessionStorage.getItem(index) != null;index--){
-            var s = sessionStorage.getItem(index);
-            arrayJson.push(s.substr(1,s.length-2));
-        }
+
         arrayString = "{"+arrayJson.join(",")+"}";
 
         console.log("arrayString" +arrayString);
