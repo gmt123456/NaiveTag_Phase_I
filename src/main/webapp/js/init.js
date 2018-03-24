@@ -5,10 +5,13 @@
  */
 var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
-var jsonString = "";//需要加载的json文件字符串格式
+var jsonString = undefined;//需要加载的json文件字符串格式
 
 var taskType = 100;
 
+
+var arrayKeyN;
+var arrayKey = new Array();
 //初始化界面
 window.onload = function () {
     //需要初始化的有：fileIndex(1)、filePath、jsonString、和jsontask数据：taskType、classes、description
@@ -16,34 +19,50 @@ window.onload = function () {
     //sessionStorage.clear();
 
     //例：
-    /*
+/*
     jsonString="{\n" +
         "  \"Images/image1/data/161050086.jpg\":\n" +
         "  [\n" +
-        "    {\"label\":\"name4\",\n" +
-        "      \"pos\":[124,264,86,210]}\n" +
-        "  ,{\"label\":\"name3\",\n" +
+        "    {\"label\":\"name3\",\n" +
         "    \"pos\":[97,151,254,337]}\n" +
         "  ]\n" +
         ",\"Images/image1/data/161050085.jpg\":\n" +
         "[\n" +
-        "  {\"label\":\"name3\",\"pos\":[149,391,51,244]}\n" +
-        ",{\"label\":\"name4\",\"pos\":[444,684,121,288]}\n" +
+        "  {\"label\":\"name4\",\"pos\":[444,684,121,288]}\n" +
         ",{\"label\":\"name2\",\"pos\":[164,236,207,336]}\n" +
         "]\n" +
         "}";
 */
-    fileIndex = parseInt(window.location.search.replace("?", ""));
+    jsonString = sessionStorage.tagJSon;
+    //alert(typeof(jsonString));
+    //alert(jsonString);
+    if(jsonString === "undefined"){
+        //alert("undfin"+jsonString);
+        fileIndex = parseInt(window.location.search.replace("?", ""));
+
+        fetchImg(0, 1, function (xmlHttp) {
+            var list = xmlHttp.responseText;
+            console.log(list);
+            filePath = JSON.parse(list)[0];
+            setAndStartJsonTask(findTaskUrl());
+            loadJsonData();
+            console.log(jsonString);
+        })
+    }else{
+        fileIndex = 0;
+        for(var i in JSON.parse(jsonString)){
+            arrayKey.push(i);
+        }
+        arrayKeyN = arrayKey.length;
+        filePath = arrayKey[fileIndex];
+        alert("yes"+filePath);
+        setAndStartJsonTask(findTaskUrl());
+        loadJsonData();
+    }
     //alert(window.location.search.replace("?",""));
     //alert(typeof(fileIndex));
     //alert(fileIndex);
-    fetchImg(fileIndex, 1, function (xmlHttp) {
-        var list = xmlHttp.responseText;
-        console.log(list);
-        filePath = JSON.parse(list)[0];
-        setAndStartJsonTask(findTaskUrl());
-        loadJsonData();
-    })
+
     /*
      function sleep(d) {
      for (var t = Date.now(); Date.now() - t <= d;);
@@ -54,6 +73,11 @@ window.onload = function () {
 
     */
 
+}
+
+function getfilePath() {
+    //在拥有json文件时从这里得到filePath
+    return arrayKey[fileIndex];
 }
 
 function findTaskUrl() {
@@ -282,7 +306,9 @@ function startTask(taskID, arrayTag, description) {
     } else if (taskID % 2 == 0) {
         newCollapseLeft("标签", arrayTag);
     }
+    alert(filePath);
     setPicture(filePath);
+    alert("success");
 }
 
 
@@ -410,12 +436,18 @@ $("#last").click(function () {
             saveWeb();
             //alert("beforefet:fileIndex:"+fileIndex);
             fileIndex = fileIndex - 1;
-            fetchImg(fileIndex, 1, function (xmlHttp) {
-                var list = xmlHttp.responseText;
-                console.log(list);
-                filePath = JSON.parse(list)[0];
+            if(jsonString === "undefined"){
+                fetchImg(fileIndex, 1, function (xmlHttp) {
+                    var list = xmlHttp.responseText;
+                    console.log(list);
+                    filePath = JSON.parse(list)[0];
+                    changePicData(fileIndex);
+                });
+            }else{
+                filePath = getfilePath();
                 changePicData(fileIndex);
-            });
+            }
+
             //alert("afterfet:fileIndex:"+fileIndex);
             //sleep(5000);
 
@@ -431,17 +463,25 @@ function changePicData(fileIndex) {
 
 $("#next").click(function () {
     if (checkAll()) {
-        saveWeb();
-        //alert("beforefet:fileIndex:"+fileIndex);
-        fileIndex = fileIndex + 1;
-        fetchImg(fileIndex, 1, function (xmlHttp) {
-            var list = xmlHttp.responseText;
-            console.log(list);
-            filePath = JSON.parse(list)[0];
-            changePicData(fileIndex);
-        });
-        //alert("afterfet:fileIndex:"+fileIndex);
-        //sleep(5000);
+        if (fileIndex < arrayKeyN) {
+            saveWeb();
+            //alert("beforefet:fileIndex:"+fileIndex);
+            fileIndex = fileIndex + 1;
+            if(jsonString === "undefined"){
+                fetchImg(fileIndex, 1, function (xmlHttp) {
+                    var list = xmlHttp.responseText;
+                    console.log(list);
+                    filePath = JSON.parse(list)[0];
+                    changePicData(fileIndex);
+                });
+            }else{
+                filePath = getfilePath();
+                changePicData(fileIndex);
+            }
+
+            //alert("afterfet:fileIndex:"+fileIndex);
+            //sleep(5000);
+        }
     }
 })
 
@@ -620,14 +660,14 @@ function delInputBox() {
 
 function loadJsonData() {
     //加载json标记数据
-    if(jsonString.length != 0){
+    if(jsonString === "undefined" || jsonString.length == 0){
+    }else{
         var jsonfileStr = JSON.parse(jsonString);
         var content = jsonfileStr[filePath];
         var json = {[filePath]:content};
         sessionStorage.setItem(fileIndex,JSON.stringify(json));
         returnData(fileIndex);
     }
-
 }
 
 var arrayString;
@@ -645,6 +685,7 @@ $("#save").click(function () {
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";
+
         console.log("arrayString" +arrayString);
         $('#fakeSaveResult').val(arrayString);
         $('#saveForm').submit(alert('save'));
