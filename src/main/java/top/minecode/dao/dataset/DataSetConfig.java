@@ -12,6 +12,15 @@ import java.util.Set;
  */
 class DataSetConfig {
 
+    private static final int TOTAL_MARK = 100;
+    private static final int SINGLE_SQUARE_MARK = 200;
+    private static final int MULTI_SQUARE_MARK = 300;
+    private static final int AREA_MARK = 400;
+    private static final int TOTAL_DESCRIBE = 101;
+    private static final int SINGLE_SQUARE_DESCRIBE = 201;
+    private static final int MULTI_SQUARE_DESCRIBE = 301;
+    private static final int AREA_DESCRIBE = 401;
+
     static final String TASK_TYPE = "taskType";
 
     static final String FORMAT = "format";
