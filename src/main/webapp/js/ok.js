@@ -99,13 +99,13 @@ $(function () {
     function addImg() {
         for (var i = 0; i < responseResult.length; i++) {
             var src = responseResult[i];
-            addImgItem(beginIndex,src);
+            addImgItem(beginIndex,src, i);
             beginIndex++;
         }
     }
 
-    function addImgItem(index,src) {
-        item = '<div class="img-box "><a href="index.htm?' + index + '"><img class="img-fluid" src="' + src + '"></a></div>';
+    function addImgItem(index,src, i) {
+        item = '<div class="img-box "><a id=' + i + ' href="index.htm?' + index + '"><img class="img-fluid" src="' + src + '"></a></div>';
         $("#img-container").append(item);
     }
 

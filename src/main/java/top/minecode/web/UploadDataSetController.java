@@ -18,6 +18,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created on 2018/3/19.
@@ -40,6 +41,24 @@ public class UploadDataSetController {
         return "upload";
     }
 
+    @RequestMapping(value = "/intimeSave.html")
+    public void inTimeSave(HttpServletRequest request, @RequestParam String url,
+                           @RequestParam String info) {
+        HttpSession session = request.getSession();
+        if (session == null)
+            return;
+        Map<String, String> infoMap = (Map<String, String>) session.getAttribute("info");
+        infoMap.put(url, info);
+    }
+
+    @RequestMapping(value = "intimeLoad.html")
+    public @ResponseBody String inTimeLoad(HttpServletRequest request, @RequestParam String url) {
+        HttpSession session = request.getSession();
+        if (session == null)
+            return null;
+        Map<String, String> infoMap = (Map<String, String>) session.getAttribute("info");
+        return infoMap.get(url);
+    }
 
     @RequestMapping(value = "/load.html")
     public @ResponseBody String loadData(HttpServletRequest request) {
