@@ -14,7 +14,7 @@ window.onload = function () {
     //例：
     localStorage.clear();
 
-    taskType = 401;
+    taskType = 300;
     var classes = ["name1", "name2", "name3", "name4"];
     var description = "这是任务描述";
 
@@ -370,39 +370,41 @@ function setPicture(url) {
 $("#last").click(function () {
     if(checkAll()){
         if(fileIndex > 0){
-            document.getElementById("save").click();
+            saveWeb();
             //alert("beforefet:fileIndex:"+fileIndex);
             fileIndex = fileIndex - 1;
             fetchImg(fileIndex,1,function (xmlHttp) {
                 var list=xmlHttp.responseText;
                 console.log(list);
                 filePath = JSON.parse(list)[0];
+                changePicData(fileIndex);
             });
-            alert("afterfet:fileIndex:"+fileIndex);
+            //alert("afterfet:fileIndex:"+fileIndex);
             //sleep(5000);
-            setPicture(filePath);
-            delAll();
-            returnData(fileIndex);
 
         }
     }
 })
 
+function changePicData(fileIndex) {
+    setPicture(filePath);
+    delAll();
+    returnData(fileIndex);
+}
+
 $("#next").click(function () {
     if(checkAll()){
-        document.getElementById("save").click();
+        saveWeb();
         //alert("beforefet:fileIndex:"+fileIndex);
         fileIndex = fileIndex + 1;
         fetchImg(fileIndex,1,function (xmlHttp) {
             var list=xmlHttp.responseText;
             console.log(list);
             filePath = JSON.parse(list)[0];
+            changePicData(fileIndex);
         });
-        alert("afterfet:fileIndex:"+fileIndex);
+        //alert("afterfet:fileIndex:"+fileIndex);
         //sleep(5000);
-        setPicture(filePath);
-        delAll();
-        returnData(fileIndex);
     }
 })
 
@@ -485,66 +487,66 @@ function checkPolygon() {
     }
 }
 
-$("#save").click(function () {
-    switch (taskType){
+function saveWeb() {
+    switch (taskType) {
         case 100:
-            save100(filePath,arrayright[0].labelArray[0].name,fileIndex);
+            save100(filePath, arrayright[0].labelArray[0].name, fileIndex);
             break;
         case 101:
-            if(boxArray[0].input.value==""){
-                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-            }else{
-                boxArray[0].input.setAttribute("style","");
-                save100(filePath,boxArray[0].input.value,fileIndex);
+            if (boxArray[0].input.value == "") {
+                boxArray[0].input.setAttribute("style", "box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+            } else {
+                boxArray[0].input.setAttribute("style", "");
+                save100(filePath, boxArray[0].input.value, fileIndex);
             }
             break;
         case 200:
-            save200(filePath,arrayright[0].labelArray[0].name,fileIndex,arrayRect[0]);
+            save200(filePath, arrayright[0].labelArray[0].name, fileIndex, arrayRect[0]);
             break;
         case 201:
-            if(boxArray[0].input.value==""){
-                boxArray[0].input.setAttribute("style","box-shadow:0 0 8px rgba(255, 0,0,0.8);");
-            }else{
-                boxArray[0].input.setAttribute("style","");
-                save200(filePath,boxArray[0].input.value,fileIndex,arrayRect[0]);
+            if (boxArray[0].input.value == "") {
+                boxArray[0].input.setAttribute("style", "box-shadow:0 0 8px rgba(255, 0,0,0.8);");
+            } else {
+                boxArray[0].input.setAttribute("style", "");
+                save200(filePath, boxArray[0].input.value, fileIndex, arrayRect[0]);
             }
             break;
         case 300:
             var labelnamelist = new Array();
-            for(var i=0;i<arrayright.length;i++){
+            for (var i = 0; i < arrayright.length; i++) {
                 labelnamelist.push(arrayright[i].labelArray[0].name);
             }
-            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
+            save300(filePath, labelnamelist, fileIndex, arrayRect, arrayRect.length);
             break;
         case 301:
             var labelnamelist = new Array();
-            for(var i=0;i<boxArray.length;i++){
+            for (var i = 0; i < boxArray.length; i++) {
                 labelnamelist.push(boxArray[i].input.value);
             }
-            save300(filePath,labelnamelist,fileIndex,arrayRect,arrayRect.length);
+            save300(filePath, labelnamelist, fileIndex, arrayRect, arrayRect.length);
             break;
         case 400:
             var pointlist = array[0].set;
             var number = pointlist.length;
-            if(number%2!=0){
+            if (number % 2 != 0) {
                 pointlist.pop();
                 number--;
             }
-            save400(filePath,fileIndex,pointlist,number);
+            save400(filePath, fileIndex, pointlist, number);
             break;
         case 401:
             var pointlist = array[0].set;
             var number = pointlist.length;
-            if(number%2!=0){
+            if (number % 2 != 0) {
                 pointlist.pop();
                 number--;
             }
-            save401(filePath,boxArray[0].input.value,fileIndex,pointlist,number);
+            save401(filePath, boxArray[0].input.value, fileIndex, pointlist, number);
             break;
         default:
             break;
     }
-})
+}
 
 
 function delAllRect() {
@@ -578,3 +580,20 @@ function delInputBox() {
         boxArray.pop();
     }
 }
+
+
+var arrayJson;
+
+$("#save").click(function () {
+    if(checkAll()){
+        saveWeb();
+        arrayJson = new Array();
+        for(var index = fileIndex;localStorage.getItem(index) != null;index++){
+            arrayJson.push(JSON.parse(localStorage.getItem(index)));
+        }
+        for(var index = fileIndex - 1;localStorage.getItem(index) != null;index--){
+            arrayJson.push(JSON.parse(localStorage.getItem(index)));
+        }
+        alert(arrayJson.toString());
+    }
+})
