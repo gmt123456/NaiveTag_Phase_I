@@ -1,0 +1,118 @@
+<!--Created by 高梦婷 on 2018/3/17.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>图片标注界面</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-toggleable-md navbar-light bg-faded navbar-inverse bg-inverse"
+                 style="height: 60px">
+                <h4 style="color: white;width: 120px;">
+                    任务描述：
+                </h4>
+                <div id="description" style="color: white;font-family: Tahoma">
+
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <p></p>
+                    <button id="polygon" class="btn btn-outline-primary btn-block" type="button">
+                        画线
+                    </button>
+                    <button id="toggle" class="btn btn-outline-primary btn-block" type="button">
+                        矩形
+                    </button>
+                    <button id="backR" class="btn btn-outline-primary btn-block" type="button">
+                        回退
+                    </button>
+                    <button id="backP" class="btn btn-outline-primary btn-block" type="button">
+                        回退
+                    </button>
+
+                    <p></p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <button id="last" class="btn btn-block btn-outline-primary" type="button">
+                                上一个
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+
+                            <button id="next" class="btn btn-block btn-outline-primary" type="button">
+                                下一个
+                            </button>
+                        </div>
+                    </div>
+
+                    <p></p>
+
+                    <h4 id="choosetag">Choose Tags:</h4>
+                    <div id="card-left">
+
+                    </div>
+                </div>
+
+                <!--画布部分-->
+                <div class="col-md-8 column">
+                    <canvas id="canvas" width="1000" height="700"
+                            style="border:1px solid #d3d3d3;background-size:1000px 700px;" ondragstart="return false;"
+                            oncontextmenu="return false;"></canvas>
+                </div>
+
+                <!--右侧手风琴切换部分-->
+                <p></p>
+                <div class="col-md-2">
+                    <h4 id="yourtag">Your Tags:</h4>
+                    <div id="card-right">
+
+                    </div>
+                    <p></p>
+                    <button id="save" class="btn btn-outline-primary btn-block" type="button">
+                        保存
+                    </button>
+
+                    <form id="saveForm" method="post" style="display: block" action="/naive/save.html">
+                        <input type="text" id="fakeSaveResult" name="value">
+                        <input type="submit" value="提交">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/ok.js"></script>
+<script src="js/init.js"></script>
+<script src="js/drawrect.js"></script>
+<script src="js/collapse.js"></script>
+<script src="js/inputbox.js"></script>
+<script src="js/drawPolygon.js"></script>
+<script src="js/popper.min.js"></script>
+
+</body>
+</html>

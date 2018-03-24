@@ -30,6 +30,9 @@ $(function () {
 
     $('#uploadForm').submit(function () {
         loadOutput('dataSet');
+        alert('upload');
+        $('#img-container').empty();
+        $('#img-container').append("新的页面");
     })
 
     function fecthAndAddImg() {
@@ -55,6 +58,14 @@ $(function () {
         }
     })
 
+    $('#loadHistoryPic').click(function () {
+        $.ajax({
+            url: '',
+            type:'GET',
+            async:true,
+
+        })
+    })
 
     function addImg() {
         console.log("add");
