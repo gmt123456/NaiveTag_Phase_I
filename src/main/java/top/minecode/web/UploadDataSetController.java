@@ -48,12 +48,12 @@ public class UploadDataSetController {
 
 
     @RequestMapping(value = "/save.html", method = {RequestMethod.POST})
-    public void saveData(HttpServletRequest request) {
+    public String saveData(HttpServletRequest request) {
         String results = request.getParameter("value");
         System.out.println(results);
         HttpSession session = request.getSession();
         session.setAttribute("history", results);
-
+        return "oj";
     }
 
 
