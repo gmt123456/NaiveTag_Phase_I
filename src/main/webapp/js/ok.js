@@ -57,16 +57,26 @@ $(function () {
         }
     })
 
+    sessionStorage.tagJSon=undefined;
+
     $('#loadHistoryPic').click(function () {
         homePageContent= $('#img-container').children();
         $('#img-container').empty();
         $('#temp').load('load.html', function () {
             var history=JSON.parse($('#temp').text());
-            sessionStorage.tagJSon=$('#temp').text();
-            for (var key in history){
-                addImgItem('',key);
+            for(var key in history){
+                var a= JSON.stringify(history[key]);
+                sessionStorage.setItem(key, a);
+                var b= sessionStorage.getItem(key,a);
             }
-            console.log("tagJSon"+ sessionStorage.tagJSon);
+            console.log(sessionStorage);
+
+            // sessionStorage.tagJSon=$('#temp').text();
+            // var i=-1;
+            // for (var key in history){
+            //     addImgItem(i,key);
+            //     i--;
+            // }
         });
 
 
