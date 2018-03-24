@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 public class TaskController {
 
-    @RequestMapping("/task")
+    @RequestMapping("/task.do")
     public @ResponseBody String getPicList(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (session == null)
