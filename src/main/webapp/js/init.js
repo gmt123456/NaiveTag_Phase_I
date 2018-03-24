@@ -53,14 +53,8 @@ window.onload = function () {
      $.getJSON("test.json",function(json){
      taskType = 401;
 
-<<<<<<< HEAD
-    });
+    */
 
-*/
-=======
-     });
-     */
->>>>>>> 82c7ab47cf5410276dbaf2ec25bcd389e1265c0f
 }
 
 function sleep(d) {
@@ -628,7 +622,6 @@ var arrayString;
 $("#save").click(function () {
     if (checkAll()) {
         saveWeb();
-<<<<<<< HEAD
         var arrayJson = new Array();
         for(var index = fileIndex;localStorage.getItem(index) != null;index++){
             var s = localStorage.getItem(index);
@@ -639,23 +632,5 @@ $("#save").click(function () {
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";
-=======
-        arrayJson = new Array();
-        for (var index = fileIndex; localStorage.getItem(index) != null; index++) {
-            arrayJson.push(JSON.parse(localStorage.getItem(index)));
-        }
-        for (var index = fileIndex - 1; localStorage.getItem(index) != null; index--) {
-            arrayJson.push(JSON.parse(localStorage.getItem(index)));
-        }
-        var result = JSON.stringify(arrayJson)
-
-        $.ajax({
-            type: "POST",
-            url: "save.html",
-            data:'results:'+result,
-            dataType:"json",
-            contentType:'application/json'
-        });
->>>>>>> 82c7ab47cf5410276dbaf2ec25bcd389e1265c0f
     }
 })
