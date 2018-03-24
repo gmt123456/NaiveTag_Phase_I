@@ -5,7 +5,7 @@
  */
 var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
-var jsonString;//需要加载的json文件字符串格式
+var jsonString = "";//需要加载的json文件字符串格式
 
 var taskType = 100;
 
@@ -16,6 +16,7 @@ window.onload = function () {
     localStorage.clear();
 
     //例：
+    /*
     jsonString="{\n" +
         "  \"Images/image1/data/161050086.jpg\":\n" +
         "  [\n" +
@@ -31,7 +32,7 @@ window.onload = function () {
         ",{\"label\":\"name2\",\"pos\":[164,236,207,336]}\n" +
         "]\n" +
         "}";
-
+*/
     fileIndex = parseInt(window.location.search.replace("?", ""));
     //alert(window.location.search.replace("?",""));
     //alert(typeof(fileIndex));
@@ -40,7 +41,7 @@ window.onload = function () {
         var list = xmlHttp.responseText;
         console.log(list);
         filePath = JSON.parse(list)[0];
-        setAndStartJsonTask("test.json");
+        setAndStartJsonTask(findTaskUrl());
         loadJsonData();
     })
     /*
@@ -55,13 +56,24 @@ window.onload = function () {
 
 }
 
+function findTaskUrl() {
+    var length = filePath.length;
+    var num = 0;
+    var i;
+    for(i = length-1;num<2;i--){
+        if(filePath[i] === "/"){
+            num++;
+        }
+    }
+    var url = filePath.substr(0,i+2)+"task.json";
+    return url;
+}
+
 function setAndStartJsonTask(url) {
     $.getJSON(url,function(json){
-        alert(JSON.stringify(json));
         taskType = json.taskType;
         var classes = json.classes;
         var description = json.description;
-        alert(taskType);
         startTask(taskType, classes, description);
 
     })
@@ -604,22 +616,16 @@ function delInputBox() {
         boxArray.pop();
     }
 }
-function getJsonStr(url) {
-    $.getJSON(url,function(json){
-
-        alert("getjson!");
-        return JSON.stringify(json);
-
-    });
-}
 
 function loadJsonData() {
     //加载json标记数据
-    var jsonfileStr = JSON.parse(jsonString);
-    var content = jsonfileStr[filePath];
-    var json = {[filePath]:content};
-    localStorage.setItem(fileIndex,JSON.stringify(json));
-    returnData(fileIndex);
+    if(jsonString.length != 0){
+        var jsonfileStr = JSON.parse(jsonString);
+        var content = jsonfileStr[filePath];
+        var json = {[filePath]:content};
+        localStorage.setItem(fileIndex,JSON.stringify(json));
+        returnData(fileIndex);
+    }
 
 }
 
