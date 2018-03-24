@@ -647,9 +647,8 @@ $("#save").click(function () {
         arrayString = "{"+arrayJson.join(",")+"}";
         alert(arrayString);
         $('#fakeSaveResult').val(arrayString);
-        console.log("arrayString "+arrayString)
-        console.log( $('#fakeSaveResult').val());
         $('#saveForm').submit(alert('save'));
+        $('#fakeSave').click();
 
     }
 })
