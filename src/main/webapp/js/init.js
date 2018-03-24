@@ -16,9 +16,6 @@ window.onload = function () {
     localStorage.clear();
 
     //例：
-    taskType = 300;
-    var classes = ["name1", "name2", "name3", "name4"];
-    var description = "这是任务描述";
     jsonString="{\n" +
         "  \"Images/image1/data/161050086.jpg\":\n" +
         "  [\n" +
@@ -43,7 +40,7 @@ window.onload = function () {
         var list = xmlHttp.responseText;
         console.log(list);
         filePath = JSON.parse(list)[0];
-        startTask(taskType, classes, description);
+        setAndStartJsonTask("test.json");
         loadJsonData();
     })
     /*
@@ -58,8 +55,16 @@ window.onload = function () {
 
 }
 
-function sleep(d) {
-    for (var t = Date.now(); Date.now() - t <= d;);
+function setAndStartJsonTask(url) {
+    $.getJSON(url,function(json){
+        alert(JSON.stringify(json));
+        taskType = json.taskType;
+        var classes = json.classes;
+        var description = json.description;
+        alert(taskType);
+        startTask(taskType, classes, description);
+
+    })
 }
 
 function save100(filename, labelname, index) {
