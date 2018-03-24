@@ -13,7 +13,7 @@ var taskType = 100;
 window.onload = function () {
     //需要初始化的有：fileIndex(1)、filePath、jsonString、和jsontask数据：taskType、classes、description
 
-    //localStorage.clear();
+    //sessionStorage.clear();
 
     //例：
     /*
@@ -81,7 +81,7 @@ function setAndStartJsonTask(url) {
 
 function save100(filename, labelname, index) {
     var value = {[filename]: {"label": labelname}};
-    localStorage.setItem(index, JSON.stringify(value));
+    sessionStorage.setItem(index, JSON.stringify(value));
 }
 
 function return100(content) {
@@ -109,7 +109,7 @@ function return100(content) {
 function save200(filename, labelname, index, Rect) {
     var pos = [Rect.x, (Rect.x + Rect.width), Rect.y, (Rect.y + Rect.height)];
     var value = {[filename]: {"label": labelname, "pos": pos}};
-    localStorage.setItem(index, JSON.stringify(value));
+    sessionStorage.setItem(index, JSON.stringify(value));
 }
 
 function return200(content) {
@@ -143,7 +143,7 @@ function save300(filename, labelnameList, index, rectList, number) {
         content.push(item);
     }
     var value = {[filename]: content};
-    localStorage.setItem(index, JSON.stringify(value));
+    sessionStorage.setItem(index, JSON.stringify(value));
 }
 
 function return300(content) {
@@ -178,7 +178,7 @@ function save400(filename, index, pointList, number) {
         content.push(pos);
     }
     var value = {[filename]: {"pos": content}};
-    localStorage.setItem(index, JSON.stringify(value));
+    sessionStorage.setItem(index, JSON.stringify(value));
 }
 
 
@@ -208,7 +208,7 @@ function save401(filename, labelname, index, pointList, number) {
         content.push(pos);
     }
     var value = {[filename]: {"label": labelname, "pos": content}};
-    localStorage.setItem(index, JSON.stringify(value));
+    sessionStorage.setItem(index, JSON.stringify(value));
 }
 
 function return401(content) {
@@ -233,17 +233,17 @@ function return401(content) {
 
 function returnData(Index) {
     var nothing = false;
-    if (localStorage.getItem(Index) === null) {
+    if (sessionStorage.getItem(Index) === null) {
         nothing = true;
         loadJsonData();
     }
     var content = null;
     if (!nothing) {
-        var json = JSON.parse(localStorage.getItem(Index));
+        var json = JSON.parse(sessionStorage.getItem(Index));
         content = json[filePath];
     }
     //alert(JSON.stringify(content));
-    //alert(localStorage.getItem(Index+""));
+    //alert(sessionStorage.getItem(Index+""));
     switch (taskType) {
         case 100:
             return100(content);
@@ -624,7 +624,7 @@ function loadJsonData() {
         var jsonfileStr = JSON.parse(jsonString);
         var content = jsonfileStr[filePath];
         var json = {[filePath]:content};
-        localStorage.setItem(fileIndex,JSON.stringify(json));
+        sessionStorage.setItem(fileIndex,JSON.stringify(json));
         returnData(fileIndex);
     }
 
@@ -636,12 +636,12 @@ $("#save").click(function () {
     if (checkAll()) {
         saveWeb();
         var arrayJson = new Array();
-        for(var index = fileIndex;localStorage.getItem(index) != null;index++){
-            var s = localStorage.getItem(index);
+        for(var index = fileIndex;sessionStorage.getItem(index) != null;index++){
+            var s = sessionStorage.getItem(index);
             arrayJson.push(s.substr(1,s.length-2));
         }
-        for(var index = fileIndex - 1;localStorage.getItem(index) != null;index--){
-            var s = localStorage.getItem(index);
+        for(var index = fileIndex - 1;sessionStorage.getItem(index) != null;index--){
+            var s = sessionStorage.getItem(index);
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";

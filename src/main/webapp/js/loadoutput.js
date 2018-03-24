@@ -6,8 +6,8 @@ function loadOutput(id) {
 
     reader.onload = function() {
         var object = JSON.parse(this.result);
-        var taskCode = localStorage.taskCode;
-        localStorage.history = object;
+        var taskCode = sessionStorage.taskCode;
+        sessionStorage.history = object;
     }
 
 }
