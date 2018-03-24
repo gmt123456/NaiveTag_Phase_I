@@ -65,8 +65,10 @@ $(function () {
             for (var key in history){
                 addImgItem('',key);
             }
+
+            sessionStorage.tagJSon=history;
         });
-        
+
     })
 
     $('#homePage').disable();
