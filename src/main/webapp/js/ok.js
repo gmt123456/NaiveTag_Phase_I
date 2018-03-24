@@ -17,8 +17,7 @@ function fetchImg(beginIndex, footstep, func) {
 }
 var beginIndex = 0, footstep = 25;
 $(function () {
-    var a = 161050084;
-    var itemPerRow = 5;
+    var homePageContent;
     var item;
     var responseResult;
     var idle;
@@ -59,22 +58,32 @@ $(function () {
     })
 
     $('#loadHistoryPic').click(function () {
-        $('#temp').load('load.html',function () {
+        homePageContent= $('#img-container').children();
+        $('#img-container').empty();
+        $('#temp').load('load.html', function () {
             var history=JSON.parse($('#temp').text());
-            $('#img-container').empty();
+            sessionStorage.tagJSon=$('#temp').text();
             for (var key in history){
                 addImgItem('',key);
             }
-
-            sessionStorage.tagJSon=history;
+            console.log("tagJSon"+ sessionStorage.tagJSon);
         });
+
+
 
     })
 
-    $('#homePage').disable();
+    $('.img-box').click(function () {
+        console.log("img-box click");
+    })
+
+
+
 
     $('#homePage').click(function () {
-
+        $('#img-container').empty();
+        console.log(homePageContent);
+        $('#img-container').append(homePageContent);
     })
 
     function addImg() {
