@@ -1,9 +1,7 @@
 package top.minecode.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import top.minecode.Config;
@@ -15,6 +13,7 @@ import top.minecode.service.UploadDataSetService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,6 +38,21 @@ public class UploadDataSetController {
     @RequestMapping(value = "/index.html")
     public String uploadPage() {
         return "upload";
+    }
+
+    @RequestMapping(value = "/save.do", method = {RequestMethod.POST})
+    public void saveData(HttpServletRequest request, @RequestParam String results) {
+        HttpSession session = request.getSession();
+        if (session == null)
+            return;
+        String path = session.getAttribute("path").toString() + "output.json";
+        File output = new File(path);
+        try (FileWriter writer = new FileWriter(output)) {
+            writer.write(results);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
