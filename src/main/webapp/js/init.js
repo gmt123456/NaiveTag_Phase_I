@@ -5,6 +5,7 @@
  */
 var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
+var jsonString;
 
 var taskType = 100;
 
@@ -27,6 +28,22 @@ window.onload = function () {
         console.log(list);
         filePath = JSON.parse(list)[0];
         startTask(taskType, classes, description);
+        jsonString="{\n" +
+            "  \"Images/image1/data/161050086.jpg\":\n" +
+            "  [\n" +
+            "    {\"label\":\"name4\",\n" +
+            "      \"pos\":[124,264,86,210]}\n" +
+            "  ,{\"label\":\"name3\",\n" +
+            "    \"pos\":[97,151,254,337]}\n" +
+            "  ]\n" +
+            ",\"Images/image1/data/161050085.jpg\":\n" +
+            "[\n" +
+            "  {\"label\":\"name3\",\"pos\":[149,391,51,244]}\n" +
+            ",{\"label\":\"name4\",\"pos\":[444,684,121,288]}\n" +
+            ",{\"label\":\"name2\",\"pos\":[164,236,207,336]}\n" +
+            "]\n" +
+            "}";
+        loadJsonData();
     })
     /*
     function sleep(d) {
@@ -37,6 +54,7 @@ window.onload = function () {
         taskType = 401;
 
     });
+
 */
 }
 
@@ -390,6 +408,7 @@ function changePicData(fileIndex) {
     setPicture(filePath);
     delAll();
     returnData(fileIndex);
+    loadJsonData();
 }
 
 $("#next").click(function () {
@@ -580,20 +599,39 @@ function delInputBox() {
         boxArray.pop();
     }
 }
+function getJsonStr(url) {
+    $.getJSON(url,function(json){
 
+        alert("getjson!");
+        return JSON.stringify(json);
 
-var arrayJson;
+    });
+}
+
+function loadJsonData() {
+    //加载json标记数据
+    var jsonfileStr = JSON.parse(jsonString);
+    var content = jsonfileStr[filePath];
+    var json = {[filePath]:content};
+    localStorage.setItem(fileIndex,JSON.stringify(json));
+    returnData(fileIndex);
+
+}
+
+var arrayString;
 
 $("#save").click(function () {
     if(checkAll()){
         saveWeb();
-        arrayJson = new Array();
+        var arrayJson = new Array();
         for(var index = fileIndex;localStorage.getItem(index) != null;index++){
-            arrayJson.push(JSON.parse(localStorage.getItem(index)));
+            var s = localStorage.getItem(index);
+            arrayJson.push(s.substr(1,s.length-2));
         }
         for(var index = fileIndex - 1;localStorage.getItem(index) != null;index--){
-            arrayJson.push(JSON.parse(localStorage.getItem(index)));
+            var s = localStorage.getItem(index);
+            arrayJson.push(s.substr(1,s.length-2));
         }
-        alert(arrayJson.toString());
+        arrayString = "{"+arrayJson.join(",")+"}";
     }
 })
