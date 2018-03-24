@@ -41,20 +41,18 @@ public class UploadDataSetController {
     }
 
 
+    @RequestMapping(value = "/load.html")
+    public @ResponseBody String loadData(HttpServletRequest request) {
+        return request.getSession().getAttribute("history").toString();
+    }
+
+
     @RequestMapping(value = "/save.html", method = {RequestMethod.POST})
     public void saveData(HttpServletRequest request) {
         String results = request.getParameter("value");
         System.out.println(results);
         HttpSession session = request.getSession();
-        if (session == null)
-            return;
-        String path = session.getAttribute("path").toString() + "output.json";
-        File output = new File(path);
-        try (FileWriter writer = new FileWriter(output)) {
-            writer.write(results);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        session.setAttribute("history", results);
 
     }
 
