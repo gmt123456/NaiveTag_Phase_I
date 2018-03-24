@@ -5,7 +5,6 @@
  */
 var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
-var fileNum = 29999999;//总共多少file
 
 var taskType = 100;
 
@@ -27,20 +26,22 @@ window.onload = function () {
         var list=xmlHttp.responseText;
         console.log(list);
         filePath = JSON.parse(list)[0];
+        startTask(taskType, classes, description);
     })
-    alert("睡觉之前");
+    /*
     function sleep(d) {
         for (var t = Date.now(); Date.now() - t <= d;);
     }
-    sleep(5000);
-    startTask(taskType, classes, description);
 
-    /*
     $.getJSON("test.json",function(json){
         taskType = 401;
 
     });
 */
+}
+
+function sleep(d) {
+    for (var t = Date.now(); Date.now() - t <= d;);
 }
 
 function save100(filename, labelname, index) {
@@ -370,12 +371,15 @@ $("#last").click(function () {
     if(checkAll()){
         if(fileIndex > 0){
             document.getElementById("save").click();
+            //alert("beforefet:fileIndex:"+fileIndex);
             fileIndex = fileIndex - 1;
             fetchImg(fileIndex,1,function (xmlHttp) {
                 var list=xmlHttp.responseText;
                 console.log(list);
                 filePath = JSON.parse(list)[0];
             });
+            alert("afterfet:fileIndex:"+fileIndex);
+            //sleep(5000);
             setPicture(filePath);
             delAll();
             returnData(fileIndex);
@@ -386,18 +390,19 @@ $("#last").click(function () {
 
 $("#next").click(function () {
     if(checkAll()){
-        if(fileIndex < fileNum - 1){
-            document.getElementById("save").click();
-            fileIndex = fileIndex + 1;
-            fetchImg(fileIndex,1,function (xmlHttp) {
-                var list=xmlHttp.responseText;
-                console.log(list);
-                filePath = JSON.parse(list)[0];
-            });
-            setPicture(filePath);
-            delAll();
-            returnData(fileIndex);
-        }
+        document.getElementById("save").click();
+        //alert("beforefet:fileIndex:"+fileIndex);
+        fileIndex = fileIndex + 1;
+        fetchImg(fileIndex,1,function (xmlHttp) {
+            var list=xmlHttp.responseText;
+            console.log(list);
+            filePath = JSON.parse(list)[0];
+        });
+        alert("afterfet:fileIndex:"+fileIndex);
+        //sleep(5000);
+        setPicture(filePath);
+        delAll();
+        returnData(fileIndex);
     }
 })
 
