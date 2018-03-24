@@ -5,19 +5,35 @@
  */
 var fileIndex = 1;
 var filePath;//根据fileindex得到的filePath
-var jsonString;
+var jsonString;//需要加载的json文件字符串格式
 
 var taskType = 100;
 
 //初始化界面
 window.onload = function () {
-    //需要初始化的有：fileIndex(0)、filePath、fileNum(1)、和json数据：taskType、classes、description
-    //例：
+    //需要初始化的有：fileIndex(1)、filePath、jsonString、和jsontask数据：taskType、classes、description
+
     localStorage.clear();
 
+    //例：
     taskType = 300;
     var classes = ["name1", "name2", "name3", "name4"];
     var description = "这是任务描述";
+    jsonString="{\n" +
+        "  \"Images/image1/data/161050086.jpg\":\n" +
+        "  [\n" +
+        "    {\"label\":\"name4\",\n" +
+        "      \"pos\":[124,264,86,210]}\n" +
+        "  ,{\"label\":\"name3\",\n" +
+        "    \"pos\":[97,151,254,337]}\n" +
+        "  ]\n" +
+        ",\"Images/image1/data/161050085.jpg\":\n" +
+        "[\n" +
+        "  {\"label\":\"name3\",\"pos\":[149,391,51,244]}\n" +
+        ",{\"label\":\"name4\",\"pos\":[444,684,121,288]}\n" +
+        ",{\"label\":\"name2\",\"pos\":[164,236,207,336]}\n" +
+        "]\n" +
+        "}";
 
     fileIndex = parseInt(window.location.search.replace("?", ""));
     //alert(window.location.search.replace("?",""));
@@ -28,21 +44,6 @@ window.onload = function () {
         console.log(list);
         filePath = JSON.parse(list)[0];
         startTask(taskType, classes, description);
-        jsonString="{\n" +
-            "  \"Images/image1/data/161050086.jpg\":\n" +
-            "  [\n" +
-            "    {\"label\":\"name4\",\n" +
-            "      \"pos\":[124,264,86,210]}\n" +
-            "  ,{\"label\":\"name3\",\n" +
-            "    \"pos\":[97,151,254,337]}\n" +
-            "  ]\n" +
-            ",\"Images/image1/data/161050085.jpg\":\n" +
-            "[\n" +
-            "  {\"label\":\"name3\",\"pos\":[149,391,51,244]}\n" +
-            ",{\"label\":\"name4\",\"pos\":[444,684,121,288]}\n" +
-            ",{\"label\":\"name2\",\"pos\":[164,236,207,336]}\n" +
-            "]\n" +
-            "}";
         loadJsonData();
     })
     /*
@@ -216,6 +217,7 @@ function returnData(Index) {
     var nothing = false;
     if (localStorage.getItem(Index) === null) {
         nothing = true;
+        loadJsonData();
     }
     var content = null;
     if (!nothing) {
@@ -407,7 +409,6 @@ function changePicData(fileIndex) {
     setPicture(filePath);
     delAll();
     returnData(fileIndex);
-    loadJsonData();
 }
 
 $("#next").click(function () {
