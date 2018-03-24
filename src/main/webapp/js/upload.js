@@ -10,6 +10,5 @@ $(function () {
 
     bindFakeInput();
     $('#uploadContainer').addClass('mid w-25');
-
-    console.log(" upload.js");
+    sessionStorage.clear();
 })
