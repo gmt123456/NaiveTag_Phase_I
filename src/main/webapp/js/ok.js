@@ -59,23 +59,33 @@ $(function () {
     })
 
     $('#loadHistoryPic').click(function () {
-        $.ajax({
-            url: '',
-            type:'GET',
-            async:true,
+        $('#temp').load('load.html',function () {
+            var history=JSON.parse($('#temp').text());
+            $('#img-container').empty();
+            for (var key in history){
+                addImgItem('',key);
+            }
+        });
+        
+    })
 
-        })
+    $('#homePage').disable();
+
+    $('#homePage').click(function () {
+
     })
 
     function addImg() {
-        console.log("add");
         for (var i = 0; i < responseResult.length; i++) {
             var src = responseResult[i];
-            item = '<div class="img-box "><a href="index.htm?' + beginIndex + '"><img class="img-fluid" src="' + src + '"></a></div>';
-            $("#img-container").append(item);
-            console.log(1);
+            addImgItem(beginIndex,src);
             beginIndex++;
         }
+    }
+
+    function addImgItem(index,src) {
+        item = '<div class="img-box "><a href="index.htm?' + index + '"><img class="img-fluid" src="' + src + '"></a></div>';
+        $("#img-container").append(item);
     }
 
 })

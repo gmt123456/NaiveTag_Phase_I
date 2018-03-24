@@ -645,7 +645,7 @@ $("#save").click(function () {
             arrayJson.push(s.substr(1,s.length-2));
         }
         arrayString = "{"+arrayJson.join(",")+"}";
-        alert(arrayString);
+        console.log("arrayString" +arrayString);
         $('#fakeSaveResult').val(arrayString);
         $('#saveForm').submit(alert('save'));
         $('#fakeSave').click();

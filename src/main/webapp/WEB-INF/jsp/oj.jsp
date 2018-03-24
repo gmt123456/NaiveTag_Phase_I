@@ -23,10 +23,13 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+<nav class="navbar navbar-expand-sm bg-secondary navbar-dark fixed-top">
     <ul class="navbar-nav" >
         <li class="nav-item">
-            <a class="nav-link" id="loadHistoryPic" data-toggle="modal" data-target="#chooseFileModal" >查看历史标注</a>
+            <a class="nav-link" id="homePage">首页</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="loadHistoryPic"  >查看历史标注</a>
         </li>
     </ul>
 </nav>
@@ -65,8 +68,7 @@
         </div>
     </div>
 
-    <div id="attempt">
-    </div>
+    <div id="temp" style="display: none"></div>
 </div>
 
 
